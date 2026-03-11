@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="./selected.css" />
+  <title>Ubuntu 60 - Fontify</title>
+</head>
+<body>
+  <!-- Header (reuse) -->
+  <header class="header">
+    <div class="container header__top">
+      <a class="brand" href="./index.html">
+        <span class="brand__mark">FT</span>
+        <span class="brand__name">Fontify</span>
+      </a>
+
+      <div class="search">
+        <input class="search__input" placeholder="폰트명, 키워드로 폰트 검색" />
+        <button class="search__icon" aria-label="검색"></button>
+      </div>
+
+      <button class="btn btn--outline">
+        <span class="btn__icon" aria-hidden="true"></span>
+        로그인
+      </button>
+    </div>
+
+    <nav class="container header__nav">
+      <div class="nav">
+        <a class="nav__link" href="./index.html#popular">인기 폰트(다운로드 순)</a>
+        <a class="nav__link" href="./index.html#recommend">추천 폰트(만족도 높은 순)</a>
+        <a class="nav__link" href="#">영어 폰트</a>
+        <a class="nav__link" href="#">손글씨</a>
+      </div>
+      <a class="nav__link nav__link--muted" href="#">마이 폰트</a>
+    </nav>
+  </header>
+
+  <main class="main">
+    <section class="container detail">
+      <h1 class="detail__title">Ubuntu 60</h1>
+
+      <div class="detail__actions">
+        <span class="badge">AI생성</span>
+        <button class="btn btn--ghost btn--sm">한글 폰트 다운로드</button>
+        <button class="btn btn--ghost btn--sm">영문 폰트 다운로드</button>
+      </div>
+
+      <div class="detail__divider" aria-hidden="true"></div>
+
+      <div class="detail__grid">
+        <div class="panel">
+          <div class="panel__head">
+            <div class="panel__title">생성된 폰트 미리보기</div>
+            <div class="panel__controls">
+              <label class="seg" aria-label="크기">
+                <span class="seg__label">A</span>
+                <input class="seg__range" type="range" min="16" max="60" value="34" />
+                <span class="seg__label seg__label--lg">A</span>
+              </label>
+              <button class="icon-btn" aria-label="정렬"></button>
+            </div>
+          </div>
+
+          <div class="preview">
+            <div class="preview__latin" contenteditable="true" spellcheck="false">ABCDEFGHIJKLMNOPQRSTUVWXYZ</div>
+            <div class="preview__latin preview__latin--lower" contenteditable="true" spellcheck="false">abcdefghijklmnopqrstuvwxyz</div>
+            <div class="preview__kr" contenteditable="true" spellcheck="false">가나다라마바사아자차카타파하</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel__head">
+            <div class="panel__title">유사도 분석 결과</div>
+          </div>
+
+          <div class="analysis">
+            <div class="analysis__left">
+              <div class="ring">
+                <div class="ring__value">12%</div>
+                <div class="ring__label">유사도</div>
+              </div>
+
+              <div class="analysis__meta">
+                <div class="meta-row">
+                  <span class="dot dot--ok"></span>
+                  <span>일치율 낮음 - 유일함</span>
+                </div>
+                <div class="meta-sub">
+                  유사도는 전체 폰트 특징을 기준으로 계산됩니다.
+                </div>
+              </div>
+            </div>
+
+            <div class="analysis__cards">
+              <div class="mini">
+                <div class="mini__k">ORIGINAL FONT</div>
+                <div class="mini__v">Abc 123</div>
+              </div>
+              <div class="mini">
+                <div class="mini__k">AI GENERATED FONT</div>
+                <div class="mini__v">Abc 123</div>
+              </div>
+            </div>
+
+            <div class="analysis__bars">
+              <div class="bar">
+                <div class="bar__name">굵기 (Weight)</div>
+                <div class="bar__track"><div class="bar__fill" style="width:15%"></div></div>
+                <div class="bar__val">15%</div>
+              </div>
+              <div class="bar">
+                <div class="bar__name">기울기 (Slant)</div>
+                <div class="bar__track"><div class="bar__fill" style="width:8%"></div></div>
+                <div class="bar__val">8%</div>
+              </div>
+              <div class="bar">
+                <div class="bar__name">획 대비 (Stroke)</div>
+                <div class="bar__track"><div class="bar__fill" style="width:12%"></div></div>
+                <div class="bar__val">12%</div>
+              </div>
+              <div class="bar">
+                <div class="bar__name">자간 (Spacing)</div>
+                <div class="bar__track"><div class="bar__fill" style="width:6%"></div></div>
+                <div class="bar__val">6%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section class="mockups">
+        <h2 class="mockups__title">생성된 폰트 적용 디자인 보기</h2>
+        <div class="mockups__grid">
+          <div class="mock">
+            <div class="mock__box"></div>
+            <p class="mock__caption">티셔츠 목업 예시</p>
+          </div>
+          <div class="mock">
+            <div class="mock__box"></div>
+            <p class="mock__caption">영상 썸네일 자막 예시</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="container section note">
+        <div class="note__head">
+          <span class="note__dot"></span>
+          <h2 class="note__title">AI 폰트 생성에 관한 저작권 안내</h2>
+        </div>
+        <p class="note__body">
+          Fontify는 생성된 폰트에 대한 저작권을 보장하지 않습니다. 상용 프로젝트에 사용하기 전에는 원본 폰트의 라이선스를 확인하세요.
+        </p>
+      </section>
+
+      <section class="container section reviews">
+        <div class="reviews__head">
+          <h2>만족도 리뷰</h2>
+          <button class="btn btn--ghost btn--sm">리뷰쓰기</button>
+        </div>
+
+        <div class="review-card">
+          <div class="review-card__score">
+            <div class="score__num">4.9</div>
+            <div class="score__stars" aria-label="별점 4.9">
+              <span class="star star--on"></span><span class="star star--on"></span><span class="star star--on"></span><span class="star star--on"></span><span class="star star--on"></span>
+            </div>
+            <div class="score__meta">based on 124 reviews</div>
+          </div>
+
+          <div class="review-card__list">
+            <div class="row"><span>5</span><div class="row__track"><div class="row__fill" style="width:84%"></div></div><span>84%</span></div>
+            <div class="row"><span>4</span><div class="row__track"><div class="row__fill" style="width:12%"></div></div><span>12%</span></div>
+            <div class="row"><span>3</span><div class="row__track"><div class="row__fill" style="width:3%"></div></div><span>3%</span></div>
+            <div class="row"><span>2</span><div class="row__track"><div class="row__fill" style="width:1%"></div></div><span>1%</span></div>
+            <div class="row"><span>1</span><div class="row__track"><div class="row__fill" style="width:0%"></div></div><span>0%</span></div>
+          </div>
+        </div>
+
+        <div class="user-reviews">
+          <div class="user-review">
+            <div class="user-review__left">
+              <div class="user-review__title">결과값</div>
+              <div class="user-review__date">2026.01.21</div>
+              <div class="user-review__text">폰트 너무 예뻐요</div>
+            </div>
+            <div class="user-review__right">
+              <div class="score__stars">
+                <span class="star star--on"></span><span class="star star--on"></span><span class="star star--on"></span><span class="star star--on"></span><span class="star star--on"></span>
+              </div>
+              <span class="pill pill--soft">유용해요</span>
+            </div>
+          </div>
+
+          <div class="user-review">
+            <div class="user-review__left">
+              <div class="user-review__title">결과값</div>
+              <div class="user-review__date">2026.01.21</div>
+              <div class="user-review__text">폰트 너무 마음에요</div>
+            </div>
+            <div class="user-review__right">
+              <div class="score__stars">
+                <span class="star star--on"></span><span class="star star--on"></span><span class="star star--on"></span><span class="star star--on"></span><span class="star star--on"></span>
+              </div>
+              <span class="pill pill--soft">유용해요</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <!-- Footer (reuse) -->
+  <footer class="footer">
+    <div class="container footer__top">
+      <div class="footer__brandCol">
+        <div class="footer__brand">
+          <span class="footer__mark">FT</span>
+          <span class="footer__name">Fontify</span>
+        </div>
+        <p class="footer__tagline">
+          모든 프로젝트를 위한 완벽한 폰트<br/>
+          를 찾아보세요.<br/>
+          한글과 영문 폰트의 조화로운 발견.
+        </p>
+
+        <div class="social" aria-label="소셜 링크">
+          <a class="social__btn" href="#" aria-label="Social 1"></a>
+          <a class="social__btn" href="#" aria-label="Social 2"></a>
+          <a class="social__btn" href="#" aria-label="Social 3"></a>
+        </div>
+      </div>
+
+      <div class="footer__col">
+        <div class="footer__head">Company</div>
+        <a class="footer__link" href="#">About Service</a>
+        <a class="footer__link" href="#">Settings</a>
+        <a class="footer__link" href="#">Careers</a>
+      </div>
+
+      <div class="footer__col">
+        <div class="footer__head">Support</div>
+        <a class="footer__link" href="#">Help Center</a>
+        <a class="footer__link" href="#">Terms of Service</a>
+        <a class="footer__link" href="#">Privacy Policy</a>
+      </div>
+
+      <div class="footer__col">
+        <div class="footer__head">Legal</div>
+        <a class="footer__link" href="#">Copyright Information</a>
+        <a class="footer__link" href="#">Licensing</a>
+      </div>
+    </div>
+
+    <div class="container footer__bottom">
+      <div class="footer__addr">
+        서울특별시 강남구 테헤란로 123, 폰티파이 빌딩 4층<br/>
+        Contact: support@fontify.com | +82 2-1234-5678
+      </div>
+      <div class="footer__copy">© 2023 Fontify. All rights reserved.</div>
+    </div>
+  </footer>
+</body>
+</html>
+

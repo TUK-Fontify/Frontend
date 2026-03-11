@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+  <title>Fontify</title>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container header__top">
+      <a class="brand" href="#">
+        <span class="brand__mark">FT</span>
+        <span class="brand__name">Fontify</span>
+      </a>
+
+      <div class="search">
+        <input class="search__input" placeholder="폰트명, 키워드로 폰트 검색" />
+        <button class="search__icon" aria-label="검색"></button>
+      </div>
+
+      <button class="btn btn--outline">
+        <span class="btn__icon" aria-hidden="true"></span>
+        로그인
+      </button>
+    </div>
+
+    <nav class="container header__nav">
+      <div class="nav">
+        <a class="nav__link" href="#popular">인기 폰트(다운로드 순)</a>
+        <a class="nav__link" href="#recommend">추천 폰트(만족도 높은 순)</a>
+        <a class="nav__link" href="#">영어 폰트</a>
+        <a class="nav__link" href="#">손글씨</a>
+      </div>
+      <a class="nav__link nav__link--muted" href="#">마이 폰트</a>
+    </nav>
+  </header>
+
+  <main class="main">
+    <!-- Hero -->
+    <section class="hero container">
+      <div class="hero__bg" aria-hidden="true">
+        <span class="hero__blob hero__blob--a"></span>
+        <span class="hero__blob hero__blob--b"></span>
+        <span class="hero__blob hero__blob--c"></span>
+      </div>
+
+      <div class="hero__grid">
+        <div class="hero__copy">
+          <h1>
+            구글에서 제공하는 영어 폰트를<br/>
+            <span class="hero__accent">한글 폰트로 생성해 보세요</span>
+          </h1>
+
+          <p class="hero__desc">
+            한글 생성 가능한 영어 폰트를 탐색하고,<br/>
+            <span class="nowrap">당신의 프로젝트에 딱 맞는 스타일을 찾아보세요.</span><br/>
+            지금 바로 시작할 수 있습니다.
+          </p>
+
+          <div class="hero__actions">
+            <button class="btn btn--primary">구글 폰트</button>
+            <button class="btn btn--ghost">손글씨</button>
+          </div>
+        </div>
+
+        <div class="hero__cards" aria-label="미리보기">
+          <article class="pv">
+            <header class="pv__top">
+              <span class="pv__name">Ubuntu</span>
+              <span class="pv__tag">구글</span>
+            </header>
+            <div class="pv__sample" style="font-family: Ubuntu, sans-serif;">Hello, World!</div>
+          </article>
+
+          <article class="pv">
+            <header class="pv__top">
+              <span class="pv__name">Merryweather</span>
+              <span class="pv__tag">구글</span>
+            </header>
+            <div class="pv__sample" style="font-family: Merriweather, serif;">merry christmas</div>
+          </article>
+
+          <article class="pv">
+            <header class="pv__top">
+              <span class="pv__name">Playfair</span>
+              <span class="pv__tag">구글</span>
+            </header>
+            <div class="pv__sample" style="font-family: 'Playfair Display', serif;">Hello, World!</div>
+          </article>
+
+          <article class="pv">
+            <header class="pv__top">
+              <span class="pv__name">Lato</span>
+              <span class="pv__tag">구글</span>
+            </header>
+            <div class="pv__sample" style="font-family: Lato, sans-serif;">Hello, World!</div>
+          </article>
+
+          <article class="pv pv--dim" aria-hidden="true">
+            <header class="pv__top">
+              <span class="pv__name">Ubuntu</span>
+              <span class="pv__tag">구글</span>
+            </header>
+            <div class="pv__skeleton"></div>
+          </article>
+
+          <article class="pv pv--dim" aria-hidden="true">
+            <header class="pv__top">
+              <span class="pv__name">Ubuntu</span>
+              <span class="pv__tag">구글</span>
+            </header>
+            <div class="pv__skeleton"></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Popular -->
+    <section id="popular" class="container section">
+      <div class="section__head">
+        <div class="section__title">
+          <h2>인기 폰트</h2><span>(다운로드 순)</span>
+        </div>
+        <a class="chip" href="#">인기 폰트</a>
+      </div>
+
+      <div class="cards cards--4">
+        <a class="font-card font-card--link" href="./selected.html">
+          <div class="font-card__top">
+            <span class="font-card__name">Ubuntu</span><span class="pill">구글</span>
+          </div>
+          <div class="font-card__sample" style="font-family: Ubuntu, sans-serif;">merry ch…</div>
+        </a>
+
+        <a class="font-card font-card--link" href="./selected.html">
+          <div class="font-card__top">
+            <span class="font-card__name">Merryweather</span><span class="pill">구글</span>
+          </div>
+          <div class="font-card__sample" style="font-family: Merriweather, serif;">merry chri…</div>
+        </a>
+
+        <a class="font-card font-card--link" href="./selected.html">
+          <div class="font-card__top">
+            <span class="font-card__name">Playfair</span><span class="pill">구글</span>
+          </div>
+          <div class="font-card__sample" style="font-family: 'Playfair Display', serif;">merry chr…</div>
+        </a>
+
+        <a class="font-card font-card--link" href="./selected.html">
+          <div class="font-card__top">
+            <span class="font-card__name">Lato</span><span class="pill">구글</span>
+          </div>
+          <div class="font-card__sample" style="font-family: Lato, sans-serif;">merry chri…</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- Recommend -->
+    <section id="recommend" class="container section">
+      <div class="section__head">
+        <div class="section__title">
+          <h2>추천 폰트</h2><span>(만족도 순)</span>
+        </div>
+        <a class="chip" href="#">추천 폰트</a>
+      </div>
+
+      <div class="cards cards--4">
+        <a class="font-card font-card--link" href="./selected.html">
+          <div class="font-card__top">
+            <span class="font-card__name">Ubuntu</span><span class="pill">구글</span>
+          </div>
+          <div class="font-card__sample" style="font-family: Ubuntu, sans-serif;">merry ch…</div>
+        </a>
+
+        <a class="font-card font-card--link" href="./selected.html">
+          <div class="font-card__top">
+            <span class="font-card__name">Merryweather</span><span class="pill">구글</span>
+          </div>
+          <div class="font-card__sample" style="font-family: Merriweather, serif;">merry chri…</div>
+        </a>
+
+        <a class="font-card font-card--link" href="./selected.html">
+          <div class="font-card__top">
+            <span class="font-card__name">Playfair</span><span class="pill">구글</span>
+          </div>
+          <div class="font-card__sample" style="font-family: 'Playfair Display', serif;">merry chr…</div>
+        </a>
+
+        <a class="font-card font-card--link" href="./selected.html">
+          <div class="font-card__top">
+            <span class="font-card__name">Lato</span><span class="pill">구글</span>
+          </div>
+          <div class="font-card__sample" style="font-family: Lato, sans-serif;">merry chri…</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="howto">
+      <div class="howto__blur" aria-hidden="true"></div>
+
+      <div class="container howto__inner">
+        <p class="howto__eyebrow">How It Works</p>
+        <h2 class="howto__title">작동 방식</h2>
+
+        <div class="steps" role="list">
+          <div class="step" role="listitem">
+            <div class="step__icon step__icon--a"></div>
+            <h3>구글 폰트 선택</h3>
+            <p>마음에 드는 영문 폰트를 선택하세요.</p>
+          </div>
+
+          <div class="step step--active" role="listitem">
+            <div class="step__icon step__icon--b"></div>
+            <h3>AI 스타일 분석 및 변환</h3>
+            <p>AI가 선택한 폰트의 특징을 분석하여<br/>어울리는 한글 글꼴을 생성합니다.</p>
+          </div>
+
+          <div class="step" role="listitem">
+            <div class="step__icon step__icon--c"></div>
+            <h3>폰트 다운로드</h3>
+            <p>생성된 한글 폰트를 즉시 다운로드하세요.</p>
+          </div>
+
+          <div class="steps__line" aria-hidden="true"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Community / Review -->
+    <section class="container section community">
+      <div class="section__head">
+        <div>
+          <h2 class="community__title">커뮤니티 / 리뷰</h2>
+          <p class="community__desc">다른 사용자들이 생성한 놀라운 폰트들을 확인해보세요.</p>
+        </div>
+        <a class="link-more" href="#">더 보기 <span aria-hidden="true">→</span></a>
+      </div>
+
+      <div class="gallery">
+        <!-- Left column -->
+        <article class="tile tile--blue tile--h256">
+          <div class="tile__center">
+            <div class="tile__big">안녕하세요<br/>폰티파이</div>
+          </div>
+          <footer class="tile__footer tile__footer--light">
+            <span>안녕가득</span>
+            <span class="stat stat--light">♥ 79</span>
+          </footer>
+        </article>
+
+        <article class="tile tile--dark tile--h320">
+          <div class="tile__center">
+            <div class="tile__big" style="font-size:30px;line-height:36px;">안녕하세요</div>
+            <div class="tile__sub">우아한 명조체</div>
+          </div>
+          <footer class="tile__footer">
+            <span>designer_k</span>
+            <span class="stat stat--red">♥ 124</span>
+          </footer>
+        </article>
+
+        <!-- Middle column -->
+        <article class="tile tile--white tile--h160">
+          <div class="tile__center"><div class="tile__mid">안녕하세요</div></div>
+          <footer class="tile__footer tile__footer--muted">
+            <span>user_12</span><span class="dot"></span>
+          </footer>
+        </article>
+
+        <article class="tile tile--soft tile--h192">
+          <div class="tile__center"><div class="tile__code">Code_Font</div></div>
+          <footer class="tile__footer tile__footer--muted">
+            <span>dev_lee</span><span class="dot"></span>
+          </footer>
+        </article>
+
+        <article class="tile tile--black tile--h224">
+          <div class="tile__center"><div class="tile__big">기울임체</div></div>
+          <footer class="tile__footer">
+            <span>italic_lover</span><span class="stat stat--red">♥ 32</span>
+          </footer>
+        </article>
+
+        <!-- Right column -->
+        <article class="tile tile--white tile--h256">
+          <div class="tile__center">
+            <div class="tile__display">Fontify</div>
+          </div>
+          <footer class="tile__footer tile__footer--muted">
+            <span>Cursive_Style</span>
+            <span class="stat stat--pink">♥ 89</span>
+            <span class="stat">★ 5</span>
+          </footer>
+        </article>
+
+        <article class="tile tile--accent tile--h192">
+          <div class="tile__center"><div class="tile__popular">POPULAR</div></div>
+          <footer class="tile__footer tile__footer--accent">
+            <span>trend_setter</span><span class="dot dot--accent"></span>
+          </footer>
+        </article>
+
+        <article class="tile tile--white tile--h256 tile--kanji">
+          <div class="tile__center">
+            <div class="tile__ghost">A</div>
+            <div class="tile__kanji">가</div>
+          </div>
+          <footer class="tile__footer tile__footer--muted">
+            <span>Graphic_Kr</span><span class="stat stat--red">♥ 67</span>
+          </footer>
+        </article>
+
+        <article class="tile tile--night tile--h208">
+          <div class="tile__center"><div class="tile__mid" style="color:#e5e7eb;font-weight:300;">여 백</div></div>
+          <footer class="tile__footer">
+            <span>minimalist</span><span class="stat">★ 2</span>
+          </footer>
+        </article>
+
+        <article class="tile tile--white tile--h176">
+          <div class="tile__center"><div class="tile__mid">폰티파이</div></div>
+          <footer class="tile__footer tile__footer--muted">
+            <span>Bold_Sans</span><span class="stat stat--salmon">♥ 45</span>
+          </footer>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer__top">
+      <div class="footer__brandCol">
+        <div class="footer__brand">
+          <span class="footer__mark">FT</span>
+          <span class="footer__name">Fontify</span>
+        </div>
+        <p class="footer__tagline">
+          모든 프로젝트를 위한 완벽한 폰트<br/>
+          를 찾아보세요.<br/>
+          한글과 영문 폰트의 조화로운 발견.
+        </p>
+
+        <div class="social" aria-label="소셜 링크">
+          <a class="social__btn" href="#" aria-label="Social 1"></a>
+          <a class="social__btn" href="#" aria-label="Social 2"></a>
+          <a class="social__btn" href="#" aria-label="Social 3"></a>
+        </div>
+      </div>
+
+      <div class="footer__col">
+        <div class="footer__head">Company</div>
+        <a class="footer__link" href="#">About Service</a>
+        <a class="footer__link" href="#">Settings</a>
+        <a class="footer__link" href="#">Careers</a>
+      </div>
+
+      <div class="footer__col">
+        <div class="footer__head">Support</div>
+        <a class="footer__link" href="#">Help Center</a>
+        <a class="footer__link" href="#">Terms of Service</a>
+        <a class="footer__link" href="#">Privacy Policy</a>
+      </div>
+
+      <div class="footer__col">
+        <div class="footer__head">Legal</div>
+        <a class="footer__link" href="#">Copyright Information</a>
+        <a class="footer__link" href="#">Licensing</a>
+      </div>
+    </div>
+
+    <div class="container footer__bottom">
+      <div class="footer__addr">
+        서울특별시 강남구 테헤란로 123, 폰티파이 빌딩 4층<br/>
+        Contact: support@fontify.com | +82 2-1234-5678
+      </div>
+      <div class="footer__copy">© 2023 Fontify. All rights reserved.</div>
+    </div>
+  </footer>
+</body>
+</html>
+
