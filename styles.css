@@ -59,7 +59,7 @@ button,input{font:inherit}
 }
 .header__top{
   display:flex;
-  align-items:flex-end;
+  align-items:center;
   justify-content:space-between;
   gap:24px;
   padding-top:11px;
@@ -69,8 +69,15 @@ button,input{font:inherit}
 .brand{
   display:flex;
   align-items:center;
-  gap:8px;
+  justify-content:center;
+  width:160px;
   text-decoration:none;
+}
+.brand__logoImg{
+  height:48px;
+  display:block;
+  margin-top:8px;
+  object-fit:contain;
 }
 .brand__mark{
   width:40px;height:40px;
@@ -270,6 +277,7 @@ button,input{font:inherit}
   gap:12px;
 }
 .pv{
+  text-decoration:none;
   background:#fff;
   border:1px solid var(--card-border);
   border-radius:var(--r-12);
@@ -647,21 +655,9 @@ button,input{font:inherit}
 }
 .footer__brandCol{display:flex; flex-direction:column; gap:16px}
 .footer__brand{display:flex; align-items:center; gap:8px}
-.footer__mark{
-  width:32px;height:32px;
-  display:grid;place-items:center;
-  border-radius:8px;
-  background:rgba(6,25,223,.1);
-  color:var(--primary);
-  font-weight:700;
-  letter-spacing:-.5px;
-  font-size:14px;
-}
-.footer__name{
-  color:var(--primary);
-  font-weight:700;
-  font-size:20px;
-  letter-spacing:-.5px;
+.footer__logoImg{
+  height:32px;
+  display:block;
 }
 .footer__tagline{
   margin:0;
