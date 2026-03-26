@@ -1,4 +1,3 @@
-frontend
 # Frontend (React)
 React(Next.js)로 만든 웹 프론트엔드입니다.
 현재 메인 페이지, 영문 폰트 상세 페이지, 한글 폰트 상세 페이지가 구현된 상태입니다
