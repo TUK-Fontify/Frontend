@@ -154,6 +154,20 @@ button,input{font:inherit}
   font-weight:500;
 }
 .nav__link--muted{color:var(--muted)}
+.nav__link--active{
+  color:#0619df;
+  position:relative;
+}
+.nav__link--active::after{
+  content:'';
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:-16px;
+  height:4px;
+  border-radius:9999px;
+  background:#0619df;
+}
 .nav__link:hover{opacity:.8}
 
 /* Buttons / chips */

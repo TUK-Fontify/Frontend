@@ -5,7 +5,7 @@ type HeaderProps = {
    * - 'home': hash links stay in-page (e.g. #popular)
    * - 'english-detail' | 'selected': hash links become /#popular style
    */
-  activeNav?: 'english' | 'none';
+  activeNav?: 'english' | 'my' | 'none';
   variant?: 'home' | 'english-detail' | 'selected';
 };
 
@@ -17,6 +17,9 @@ export default function Header({
 
   const englishLinkClass =
     activeNav === 'english' ? 'nav__link nav__link--active' : 'nav__link';
+
+  const myLinkClass =
+    activeNav === 'my' ? 'nav__link nav__link--active' : 'nav__link nav__link--muted';
 
   return (
     <header className="header">
@@ -55,7 +58,7 @@ export default function Header({
             손글씨
           </a>
         </div>
-        <a className="nav__link nav__link--muted" href="#">
+        <a className={myLinkClass} href="/my-page">
           마이 폰트
         </a>
       </nav>
