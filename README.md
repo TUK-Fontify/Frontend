@@ -18,7 +18,7 @@ Next.js(App Router) 기반 프론트엔드 프로젝트입니다.
 4. 브라우저에서 접속
    - `http://localhost:3000`
 
-## 폴더 구조 (드롭다운)
+## 폴더 구조 (드롭다운) 2026-03-31
 
 <details>
 <summary><strong>app</strong> - 라우팅/페이지/전역 스타일</summary>
