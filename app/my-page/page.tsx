@@ -4,13 +4,13 @@ import Footer from '../../components/Footer';
 import Header from '../../components/Header';
 
 const avatarSrc =
-  '/4ff9e9efec106e81a0e1158f6cf801b73992c263.png';
+  '/images/my-page/profile-avatar.png';
 
 // Icons exported from Figma via the local assets server.
-const statLikeIconSrc = '/f7566ea5d8809273dfe6bc981d817fdf735e25fd.svg';
-const statReviewIconSrc = '/f5f8608fa19ca77e051d64e9492e2d9343a36c3c.png';
-const statOwnedIconSrc = '/4d059cd0e3105756d79de5876e39a8c84d3c192d.svg';
-const fontPlusIconSrc = '/e7f51e1d080b33fd257db8d2cdca9adc741fd16f.svg';
+const statLikeIconSrc = '/images/my-page/activity-like-icon.svg';
+const statReviewIconSrc = '/images/my-page/activity-review-icon.png';
+const statOwnedIconSrc = '/images/my-page/activity-owned-font-icon.svg';
+const fontPlusIconSrc = '/images/my-page/font-card-plus-icon.svg';
 
 type StatCardProps = {
   iconSrc: string;

@@ -27,7 +27,7 @@ export default function Header({
         <a className="brand" href="/">
           <img
             className="brand__logoImg"
-            src="/figma-logo.png"
+            src="/images/brand/fontify-logo.png"
             alt="Fontify logo"
           />
         </a>

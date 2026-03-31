@@ -8,7 +8,7 @@ export default function Footer() {
           <div className="footer__brand">
             <img
               className="footer__logoImg"
-              src="/figma-logo.png"
+              src="/images/brand/fontify-logo.png"
               alt="Fontify logo"
             />
           </div>
