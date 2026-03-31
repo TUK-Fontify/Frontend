@@ -1,0 +1,8 @@
+@import url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard@latest/dist/pretendard.css');
+
+/* Keep same import order as the original Next.js globals.css */
+@import './pages/home.css';
+@import './pages/selected.css';
+@import './pages/english-detail.css';
+@import './pages/my-page.css';
+

@@ -1,80 +1,72 @@
-# Frontend (Next.js)
+## Frontend (React + Vite)
 
-Next.js(App Router) 기반 프론트엔드 프로젝트입니다.  
-메인(`/`), 영어 상세(`/english-detail`), 선택 상세(`/selected`), 마이페이지(`/my-page`)가 구현되어 있습니다.
+Vite 기반 **순수 React(ReactJS)** 프론트엔드 프로젝트입니다.  
+해시 라우팅(`#/...`)으로 간단하게 화면만 전환하는 구조입니다.
 
-## 필요 프로그램
+---
 
-- Node.js (npm 포함)
+## 실행 방법
 
-## 로컬 실행
+```bash
+cd GitHub/Frontend
+npm install
+npm run dev
+```
 
-1. 저장소 폴더로 이동
-   - `cd Frontend`
-2. 의존성 설치
-   - `npm install`
-3. 개발 서버 실행
-   - `npm run dev`
-4. 브라우저에서 접속
-   - `http://localhost:3000`
+브라우저에서 접속:
 
-## 폴더 구조 (드롭다운) 2026-03-31
+- 개발 서버: `http://localhost:5173/#/`
 
-<details>
-<summary><strong>app</strong> - 라우팅/페이지/전역 스타일</summary>
+---
+
+## 라우팅 (해시 기반)
+
+React Router 없이 **URL 해시** 만으로 화면을 전환합니다.
+
+- `#/` → 메인(Home)
+- `#/english-detail` → 영어 상세 페이지
+- `#/selected` → 선택 상세 페이지
+- `#/my-page` → 마이페이지
+
+라우팅 로직: `src/App.tsx` 한 파일에서 해시를 읽어서 각 페이지 컴포넌트를 선택합니다.
+
+---
+
+## 폴더 구조 (간단)
+
+### 코드 (`src/`)
 
 ```text
-app/
-├─ layout.tsx                        # 루트 레이아웃(html/body)
-├─ globals.css                       # 전역 스타일 진입점 (페이지 CSS import)
-├─ page.tsx                          # "/" 엔트리 (HomePage 재export)
-├─ home/
-│  └─ HomePage.tsx                   # 메인 홈 화면 컴포넌트
-├─ english-detail/
-│  └─ page.tsx                       # "/english-detail" 페이지
-├─ selected/
-│  └─ page.tsx                       # "/selected" 페이지
-├─ my-page/
-│  └─ page.tsx                       # "/my-page" 페이지
+src/
+├─ main.tsx      # 진입점, React DOM 렌더 + 전역 CSS import
+├─ App.tsx       # 해시 기반 라우팅 (화면 전환 로직)
+├─ pages/        # 각 화면 컴포넌트
+│  ├─ HomePage.tsx
+│  ├─ EnglishDetailPage.tsx
+│  ├─ SelectedPage.tsx
+│  └─ MyPage.tsx
+├─ components/   # 공통 UI
+│  ├─ Header.tsx
+│  └─ Footer.tsx
 └─ styles/
+   ├─ globals.css
    └─ pages/
-      ├─ home.css                    # 홈 페이지 스타일
-      ├─ english-detail.css          # 영어 상세 페이지 스타일
-      ├─ selected.css                # 선택 상세 페이지 스타일
-      └─ my-page.css                 # 마이페이지 스타일
+      ├─ home.css
+      ├─ english-detail.css
+      ├─ selected.css
+      └─ my-page.css
 ```
 
-</details>
-
-<details>
-<summary><strong>components</strong> - 공통 UI 컴포넌트</summary>
-
-```text
-components/
-├─ Header.tsx                        # 상단 헤더/네비게이션
-└─ Footer.tsx                        # 하단 푸터
-```
-
-</details>
-
-<details>
-<summary><strong>public/images</strong> - 정적 이미지 에셋</summary>
+### 정적 파일 (`public/`)
 
 ```text
 public/
+├─ favicon.svg
+├─ icons.svg
 └─ images/
-   ├─ brand/
-   │  └─ fontify-logo.png            # 브랜드 로고 (헤더/푸터 공통)
-   ├─ common/
-   │  ├─ search-icon.svg             # 공통 검색 아이콘
-   │  ├─ google-badge-icon.svg       # 공통 뱃지 아이콘
-   │  └─ moon-icon.svg               # 공통 아이콘
-   └─ my-page/
-      ├─ profile-avatar.png          # 마이페이지 프로필 아바타
-      ├─ activity-like-icon.svg      # 나의 활동 - 좋아요 아이콘
-      ├─ activity-review-icon.png    # 나의 활동 - 리뷰 아이콘
-      ├─ activity-owned-font-icon.svg# 나의 활동 - 보유 폰트 아이콘
-      └─ font-card-plus-icon.svg     # 관심 폰트 카드 아이콘
+   ├─ common/        # 검색 아이콘 등 공통 에셋
+   ├─ my-page/       # 마이페이지용 이미지들
+   └─ brand/
+      └─ fontify-logo.png   # 헤더/푸터 로고 (src="/images/brand/fontify-logo.png")
 ```
 
-</details>

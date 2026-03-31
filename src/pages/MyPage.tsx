@@ -1,10 +1,7 @@
-'use client';
+import Footer from '../components/Footer';
+import Header from '../components/Header';
 
-import Footer from '../../components/Footer';
-import Header from '../../components/Header';
-
-const avatarSrc =
-  '/images/my-page/profile-avatar.png';
+const avatarSrc = '/images/my-page/profile-avatar.png';
 
 // Icons exported from Figma via the local assets server.
 const statLikeIconSrc = '/images/my-page/activity-like-icon.svg';
@@ -21,9 +18,7 @@ type StatCardProps = {
 
 function StatCard({ iconSrc, label, value, iconVariant }: StatCardProps) {
   return (
-    <div
-      className="mypage__statCard"
-    >
+    <div className="mypage__statCard">
       <img
         className={`mypage__statIcon ${
           iconVariant === 'darkOnWhite' ? 'mypage__statIcon--darkOnWhite' : ''
@@ -45,17 +40,15 @@ type FontCardProps = {
 };
 
 function FontCard({ title, kind, company, sampleFontFamily }: FontCardProps) {
-  const kindClass = kind === '무료' ? 'mypage__fontKind--free' : 'mypage__fontKind--paid';
+  const kindClass =
+    kind === '무료' ? 'mypage__fontKind--free' : 'mypage__fontKind--paid';
+
   return (
     <div className="mypage__fontCard">
       <div className="mypage__fontTop">
-        <div
-          className="mypage__fontSample"
-          style={{ fontFamily: sampleFontFamily }}
-        >
+        <div className="mypage__fontSample" style={{ fontFamily: sampleFontFamily }}>
           {title}
         </div>
-
         <img className="mypage__fontPlus" src={fontPlusIconSrc} alt="" />
       </div>
 
@@ -116,7 +109,7 @@ export default function MyPage() {
               <h2 className="mypage__sectionTitle mypage__sectionTitle--tight">
                 관심 폰트
               </h2>
-              <a className="mypage__viewAll" href="/selected">
+              <a className="mypage__viewAll" href="#/selected">
                 전체보기
               </a>
             </div>

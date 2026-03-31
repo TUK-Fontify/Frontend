@@ -1,8 +1,6 @@
-'use client';
-
 import { useMemo, useState } from 'react';
-import Footer from '../../components/Footer';
-import Header from '../../components/Header';
+import Footer from '../components/Footer';
+import Header from '../components/Header';
 
 function ContentEditableDiv({
   className,

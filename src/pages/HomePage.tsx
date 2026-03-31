@@ -1,5 +1,5 @@
-import Footer from '../../components/Footer';
-import Header from '../../components/Header';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 export default function HomePage() {
   return (
@@ -41,7 +41,7 @@ export default function HomePage() {
             </div>
 
             <div className="hero__cards" aria-label="미리보기">
-              <a className="pv" href="/english-detail">
+              <a className="pv" href="#/english-detail">
                 <header className="pv__top">
                   <span className="pv__name">Ubuntu</span>
                   <span className="pv__tag">구글</span>
@@ -51,20 +51,17 @@ export default function HomePage() {
                 </div>
               </a>
 
-              <a className="pv" href="/english-detail">
+              <a className="pv" href="#/english-detail">
                 <header className="pv__top">
                   <span className="pv__name">Merryweather</span>
                   <span className="pv__tag">구글</span>
                 </header>
-                <div
-                  className="pv__sample"
-                  style={{ fontFamily: 'Merriweather, serif' }}
-                >
+                <div className="pv__sample" style={{ fontFamily: 'Merriweather, serif' }}>
                   merry christmas
                 </div>
               </a>
 
-              <a className="pv" href="/english-detail">
+              <a className="pv" href="#/english-detail">
                 <header className="pv__top">
                   <span className="pv__name">Playfair</span>
                   <span className="pv__tag">구글</span>
@@ -74,7 +71,7 @@ export default function HomePage() {
                 </div>
               </a>
 
-              <a className="pv" href="/english-detail">
+              <a className="pv" href="#/english-detail">
                 <header className="pv__top">
                   <span className="pv__name">Lato</span>
                   <span className="pv__tag">구글</span>
@@ -115,7 +112,7 @@ export default function HomePage() {
           </div>
 
           <div className="cards cards--4">
-            <a className="font-card font-card--link" href="/selected">
+            <a className="font-card font-card--link" href="#/selected">
               <div className="font-card__top">
                 <span className="font-card__name">Ubuntu</span>
                 <span className="pill">구글</span>
@@ -125,33 +122,27 @@ export default function HomePage() {
               </div>
             </a>
 
-            <a className="font-card font-card--link" href="/selected">
+            <a className="font-card font-card--link" href="#/selected">
               <div className="font-card__top">
                 <span className="font-card__name">Merryweather</span>
                 <span className="pill">구글</span>
               </div>
-              <div
-                className="font-card__sample"
-                style={{ fontFamily: 'Merriweather, serif' }}
-              >
+              <div className="font-card__sample" style={{ fontFamily: 'Merriweather, serif' }}>
                 merry chri…
               </div>
             </a>
 
-            <a className="font-card font-card--link" href="/selected">
+            <a className="font-card font-card--link" href="#/selected">
               <div className="font-card__top">
                 <span className="font-card__name">Playfair</span>
                 <span className="pill">구글</span>
               </div>
-              <div
-                className="font-card__sample"
-                style={{ fontFamily: "'Playfair Display', serif" }}
-              >
+              <div className="font-card__sample" style={{ fontFamily: "'Playfair Display', serif" }}>
                 merry chr…
               </div>
             </a>
 
-            <a className="font-card font-card--link" href="/selected">
+            <a className="font-card font-card--link" href="#/selected">
               <div className="font-card__top">
                 <span className="font-card__name">Lato</span>
                 <span className="pill">구글</span>
@@ -175,7 +166,7 @@ export default function HomePage() {
           </div>
 
           <div className="cards cards--4">
-            <a className="font-card font-card--link" href="/selected">
+            <a className="font-card font-card--link" href="#/selected">
               <div className="font-card__top">
                 <span className="font-card__name">Ubuntu</span>
                 <span className="pill">구글</span>
@@ -185,33 +176,27 @@ export default function HomePage() {
               </div>
             </a>
 
-            <a className="font-card font-card--link" href="/selected">
+            <a className="font-card font-card--link" href="#/selected">
               <div className="font-card__top">
                 <span className="font-card__name">Merryweather</span>
                 <span className="pill">구글</span>
               </div>
-              <div
-                className="font-card__sample"
-                style={{ fontFamily: 'Merriweather, serif' }}
-              >
+              <div className="font-card__sample" style={{ fontFamily: 'Merriweather, serif' }}>
                 merry chri…
               </div>
             </a>
 
-            <a className="font-card font-card--link" href="/selected">
+            <a className="font-card font-card--link" href="#/selected">
               <div className="font-card__top">
                 <span className="font-card__name">Playfair</span>
                 <span className="pill">구글</span>
               </div>
-              <div
-                className="font-card__sample"
-                style={{ fontFamily: "'Playfair Display', serif" }}
-              >
+              <div className="font-card__sample" style={{ fontFamily: "'Playfair Display', serif" }}>
                 merry chr…
               </div>
             </a>
 
-            <a className="font-card font-card--link" href="/selected">
+            <a className="font-card font-card--link" href="#/selected">
               <div className="font-card__top">
                 <span className="font-card__name">Lato</span>
                 <span className="pill">구글</span>
