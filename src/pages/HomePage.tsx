@@ -1,102 +1,202 @@
+import { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
+const heroSlides = ['existing', 'figma'] as const;
+
+const bannerAvatar1 = '/images/my-page/activity-like-icon.svg';
+const bannerAvatar2 = '/images/my-page/activity-owned-font-icon.svg';
+
 export default function HomePage() {
+  const [slideIndex, setSlideIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setSlideIndex((prev) => (prev + 1) % heroSlides.length);
+    }, 8000);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  const currentSlide = heroSlides[slideIndex];
+
   return (
     <>
       <Header variant="home" />
 
       <main className="main">
-        <section className="hero container">
+        <section className="hero hero--banner container">
           <div className="hero__bg" aria-hidden="true">
             <span className="hero__blob hero__blob--a" />
             <span className="hero__blob hero__blob--b" />
             <span className="hero__blob hero__blob--c" />
           </div>
 
-          <div className="hero__grid">
-            <div className="hero__copy">
-              <h1>
-                구글에서 제공하는 영어 폰트를
-                <br />
-                <span className="hero__accent">한글 폰트로 생성해 보세요</span>
-              </h1>
+          <div className="heroSlideFrame">
+            {currentSlide === 'existing' ? (
+              <div className="hero__grid hero__grid--existing">
+              <div className="hero__copy">
+                <span className="hero__tag">GOOGLE FONTS CONVERT</span>
+                <h1 className="hero__titleTwoLine">
+                  <span>A에서 ㅎ까지,</span>
+                  <span className="hero__accentLine">디자인은 끊기지 않아야 하니까.</span>
+                </h1>
 
-              <p className="hero__desc">
-                한글 생성 가능한 영어 폰트를 탐색하고,
-                <br />
-                <span className="nowrap">당신의 프로젝트에 딱 맞는 스타일을 찾아보세요.</span>
-                <br />
-                지금 바로 시작할 수 있습니다.
-              </p>
+                <p className="hero__desc">
+                  한글 생성 가능한 영어 폰트를 탐색하고,
+                  <br />
+                  <span className="nowrap">당신의 프로젝트에 딱 맞는 스타일을 찾아보세요.</span>
+                  <br />
+                  지금 바로 시작할 수 있습니다.
+                </p>
 
-              <div className="hero__actions">
-                <button className="btn btn--primary" type="button">
-                  구글 폰트
-                </button>
-                <button className="btn btn--ghost" type="button">
-                  손글씨
-                </button>
+                <div className="hero__actions">
+                  <button
+                    className="heroPromo__btn heroPromo__btn--primary heroPromo__btn--primaryBlue"
+                    type="button"
+                  >
+                    구글 폰트에서 시작하기
+                  </button>
+                </div>
+
+                <div className="heroPromo__social">
+                  <div className="heroPromo__avatars">
+                    <img src={bannerAvatar1} alt="" />
+                    <img src={bannerAvatar2} alt="" />
+                    <div className="heroPromo__avatarsMore">+2k</div>
+                  </div>
+                  <p>12,400+ 명의 작가가 이미 폰트를 만들었습니다.</p>
+                </div>
+              </div>
+
+              <div className="hero__cards" aria-label="미리보기">
+                <a className="pv" href="#/english-detail">
+                  <header className="pv__top">
+                    <span className="pv__name">Ubuntu</span>
+                    <span className="pv__tag">구글</span>
+                  </header>
+                  <div className="pv__sample" style={{ fontFamily: 'Ubuntu, sans-serif' }}>
+                    Hello, World!
+                  </div>
+                </a>
+
+                <a className="pv" href="#/english-detail">
+                  <header className="pv__top">
+                    <span className="pv__name">Merryweather</span>
+                    <span className="pv__tag">구글</span>
+                  </header>
+                  <div className="pv__sample" style={{ fontFamily: 'Merriweather, serif' }}>
+                    merry christmas
+                  </div>
+                </a>
+
+                <a className="pv" href="#/english-detail">
+                  <header className="pv__top">
+                    <span className="pv__name">Playfair</span>
+                    <span className="pv__tag">구글</span>
+                  </header>
+                  <div className="pv__sample" style={{ fontFamily: "'Playfair Display', serif" }}>
+                    Hello, World!
+                  </div>
+                </a>
+
+                <a className="pv" href="#/english-detail">
+                  <header className="pv__top">
+                    <span className="pv__name">Lato</span>
+                    <span className="pv__tag">구글</span>
+                  </header>
+                  <div className="pv__sample" style={{ fontFamily: 'Lato, sans-serif' }}>
+                    Hello, World!
+                  </div>
+                </a>
+
+                <article className="pv pv--dim" aria-hidden="true">
+                  <header className="pv__top">
+                    <span className="pv__name">Ubuntu</span>
+                    <span className="pv__tag">구글</span>
+                  </header>
+                  <div className="pv__skeleton" />
+                </article>
+
+                <article className="pv pv--dim" aria-hidden="true">
+                  <header className="pv__top">
+                    <span className="pv__name">Ubuntu</span>
+                    <span className="pv__tag">구글</span>
+                  </header>
+                  <div className="pv__skeleton" />
+                </article>
+              </div>
+              </div>
+            ) : (
+              <div className="heroPromo">
+              <div className="heroPromo__left">
+                <span className="heroPromo__tag">INK &amp; PIXEL EDITORIAL</span>
+
+                <h1 className="heroPromo__title">
+                  당신의 손글씨가
+                  <br />
+                  <span className="heroPromo__line">
+                    <span className="heroPromo__accent">영원한 폰트</span>가 되는 순간
+                  </span>
+                </h1>
+
+                <p className="heroPromo__desc">
+                  세상에 단 하나뿐인 당신의 기록을 디지털로 숨 쉬게 하세요.
+                  <br />
+                  가장 따뜻한 기술로 완성하는 나만의 서체 라이브러리.
+                </p>
+
+                <div className="heroPromo__actions">
+                  <button className="heroPromo__btn heroPromo__btn--primary" type="button">
+                    나만의 폰트 만들기
+                  </button>
+                  <button className="heroPromo__btn heroPromo__btn--ghost" type="button">
+                    샘플 둘러보기
+                  </button>
+                </div>
+
+                <div className="heroPromo__social">
+                  <div className="heroPromo__avatars">
+                    <img src={bannerAvatar1} alt="" />
+                    <img src={bannerAvatar2} alt="" />
+                    <div className="heroPromo__avatarsMore">+2k</div>
+                  </div>
+                  <p>12,400+ 명의 작가가 이미 폰트를 만들었습니다.</p>
+                </div>
+              </div>
+
+              <div className="heroPromo__right">
+                <div className="heroPromo__card">
+                  <p className="heroPromo__cardEyebrow">PREVIEW MODE</p>
+                  <h3 className="heroPromo__cardTitle">Digital Ink Engine</h3>
+                  <div className="heroPromo__handword">사랑</div>
+                  <div className="heroPromo__cardFooter">
+                    <span className="heroPromo__cardDot" />
+                    <span>Editorial Choice</span>
+                    <span className="heroPromo__version">VER. 2.0</span>
+                  </div>
+                </div>
+
+                <div className="heroPromo__floating heroPromo__floating--badge">
+                  AI ACCURACY 99.8%
+                </div>
+                <div className="heroPromo__floating heroPromo__floating--chip">
+                  Real-time Rendering
+                </div>
               </div>
             </div>
+            )}
+          </div>
 
-            <div className="hero__cards" aria-label="미리보기">
-              <a className="pv" href="#/english-detail">
-                <header className="pv__top">
-                  <span className="pv__name">Ubuntu</span>
-                  <span className="pv__tag">구글</span>
-                </header>
-                <div className="pv__sample" style={{ fontFamily: 'Ubuntu, sans-serif' }}>
-                  Hello, World!
-                </div>
-              </a>
-
-              <a className="pv" href="#/english-detail">
-                <header className="pv__top">
-                  <span className="pv__name">Merryweather</span>
-                  <span className="pv__tag">구글</span>
-                </header>
-                <div className="pv__sample" style={{ fontFamily: 'Merriweather, serif' }}>
-                  merry christmas
-                </div>
-              </a>
-
-              <a className="pv" href="#/english-detail">
-                <header className="pv__top">
-                  <span className="pv__name">Playfair</span>
-                  <span className="pv__tag">구글</span>
-                </header>
-                <div className="pv__sample" style={{ fontFamily: "'Playfair Display', serif" }}>
-                  Hello, World!
-                </div>
-              </a>
-
-              <a className="pv" href="#/english-detail">
-                <header className="pv__top">
-                  <span className="pv__name">Lato</span>
-                  <span className="pv__tag">구글</span>
-                </header>
-                <div className="pv__sample" style={{ fontFamily: 'Lato, sans-serif' }}>
-                  Hello, World!
-                </div>
-              </a>
-
-              <article className="pv pv--dim" aria-hidden="true">
-                <header className="pv__top">
-                  <span className="pv__name">Ubuntu</span>
-                  <span className="pv__tag">구글</span>
-                </header>
-                <div className="pv__skeleton" />
-              </article>
-
-              <article className="pv pv--dim" aria-hidden="true">
-                <header className="pv__top">
-                  <span className="pv__name">Ubuntu</span>
-                  <span className="pv__tag">구글</span>
-                </header>
-                <div className="pv__skeleton" />
-              </article>
-            </div>
+          <div className="heroBanner__dots" aria-label="메인 광고 슬라이드 인디케이터">
+            {heroSlides.map((slide, idx) => (
+              <button
+                key={slide}
+                type="button"
+                className={`heroBanner__dot ${idx === slideIndex ? 'heroBanner__dot--active' : ''}`}
+                onClick={() => setSlideIndex(idx)}
+                aria-label={`${idx + 1}번 슬라이드`}
+              />
+            ))}
           </div>
         </section>
 
