@@ -1,20 +1,56 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
 const heroSlides = ['existing', 'figma'] as const;
+const COMMUNITY_BATCH_SIZE = 3;
+const COMMUNITY_TILE_COUNT = 10;
 
 const bannerAvatar1 = '/images/my-page/activity-like-icon.svg';
 const bannerAvatar2 = '/images/my-page/activity-owned-font-icon.svg';
 
 export default function HomePage() {
   const [slideIndex, setSlideIndex] = useState(0);
+  const [visibleCommunityCount, setVisibleCommunityCount] = useState(0);
+  const communityRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     const timer = window.setInterval(() => {
       setSlideIndex((prev) => (prev + 1) % heroSlides.length);
     }, 8000);
     return () => window.clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    const updateCommunityReveal = () => {
+      const sectionEl = communityRef.current;
+      if (!sectionEl) return;
+
+      const rect = sectionEl.getBoundingClientRect();
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+      const triggerLine = viewportHeight * 0.85;
+
+      if (rect.top > triggerLine) {
+        setVisibleCommunityCount(0);
+        return;
+      }
+
+      const progress = Math.max(0, triggerLine - rect.top);
+      // Increase step distance so each batch reveal is more noticeable.
+      const stepSize = Math.max(320, viewportHeight * 0.6);
+      const totalBatches = Math.ceil(COMMUNITY_TILE_COUNT / COMMUNITY_BATCH_SIZE);
+      const revealedBatches = Math.min(totalBatches, 1 + Math.floor(progress / stepSize));
+      setVisibleCommunityCount(revealedBatches * COMMUNITY_BATCH_SIZE);
+    };
+
+    updateCommunityReveal();
+    window.addEventListener('scroll', updateCommunityReveal, { passive: true });
+    window.addEventListener('resize', updateCommunityReveal);
+
+    return () => {
+      window.removeEventListener('scroll', updateCommunityReveal);
+      window.removeEventListener('resize', updateCommunityReveal);
+    };
   }, []);
 
   const currentSlide = heroSlides[slideIndex];
@@ -343,7 +379,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="container section community">
+        <section ref={communityRef} className="container section community">
           <div className="section__head">
             <div>
               <h2 className="community__title">커뮤니티 / 리뷰</h2>
@@ -356,7 +392,7 @@ export default function HomePage() {
             </a>
           </div>
 
-          <div className="gallery">
+          <div className={`gallery gallery--reveal gallery--count-${visibleCommunityCount}`}>
             <article className="tile tile--blue tile--h256">
               <div className="tile__center">
                 <div className="tile__big">

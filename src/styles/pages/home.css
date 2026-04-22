@@ -807,6 +807,22 @@ button,input{font:inherit}
   gap:24px;
   align-items:start;
 }
+.gallery--reveal .tile{
+  opacity:0;
+  transform:translateY(22px);
+  filter:blur(2px);
+  pointer-events:none;
+  transition:opacity .45s ease, transform .45s ease, filter .45s ease;
+}
+.gallery--reveal.gallery--count-3 .tile:nth-child(-n+3),
+.gallery--reveal.gallery--count-6 .tile:nth-child(-n+6),
+.gallery--reveal.gallery--count-9 .tile:nth-child(-n+9),
+.gallery--reveal.gallery--count-12 .tile:nth-child(-n+12){
+  opacity:1;
+  transform:translateY(0);
+  filter:none;
+  pointer-events:auto;
+}
 .tile{
   border-radius:var(--r-16);
   padding:24px;
