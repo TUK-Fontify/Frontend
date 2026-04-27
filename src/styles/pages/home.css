@@ -241,7 +241,7 @@ button,input{font:inherit}
   color:var(--muted);
 }
 
-/* Hero */
+/* Hero (메인 배너 공통 레이아웃) */
 .hero{
   position:relative;
   background:var(--bg-soft);
@@ -263,14 +263,18 @@ button,input{font:inherit}
 .hero__grid{
   position:relative;
   display:flex;
+  /* 좌우 블록 간격(텍스트와 우측 카드 사이 여백) */
   gap:24px;
+  /* 가이드 오른쪽 기본 여백 */
   padding-right:10px;
   box-sizing:border-box;
   align-items:center;
 }
 .hero__grid--existing{
   display:block;
+  /* 1번 배너 최소 높이 */
   min-height:420px;
+  /* absolute 우측 카드 공간 확보 폭 */
   padding-right:490px;
 }
 .hero__copy{
@@ -317,11 +321,15 @@ button,input{font:inherit}
   white-space:nowrap;
 }
 .hero__titleTwoLine > span:first-child{
+  /* 1번 배너 첫 줄 제목 크기 */
   font-size:68px;
+  /* 1번 배너 첫 줄 줄높이 */
   line-height:72px;
 }
 .hero__titleTwoLine > span:last-child{
+  /* 1번 배너 둘째 줄 제목 크기 */
   font-size:47px;
+  /* 1번 배너 둘째 줄 줄높이 */
   line-height:52px;
 }
 .hero__accentLine{
@@ -331,8 +339,11 @@ button,input{font:inherit}
 .hero__desc{
   margin:0;
   color:#4b5563;
+  /* 1번 배너 보조 설명 글자 크기 */
   font-size:20px;
+  /* 1번 배너 보조 설명 줄간격 */
   line-height:1.4;
+  /* 줄바꿈 폭 */
   max-width:620px;
 }
 .hero__actions{display:flex; gap:16px; padding-top:0}
@@ -340,7 +351,7 @@ button,input{font:inherit}
   padding-top:0;
 }
 
-/* Main banner slider */
+/* Main banner slider (1번/2번 슬라이드 컨테이너) */
 .hero--banner{
   min-height:640px;
   display:flex;
@@ -381,7 +392,9 @@ button,input{font:inherit}
 }
 .heroPromo__title{
   margin:0;
+  /* 2번 배너 제목 크기 */
   font-size:62px;
+  /* 2번 배너 제목 줄높이 */
   line-height:1.08;
   letter-spacing:-.05em;
   color:#0f172a;
@@ -401,7 +414,9 @@ button,input{font:inherit}
   margin:0;
   max-width:760px;
   color:#414754;
+  /* 2번 배너 보조 설명 크기 */
   font-size:20px;
+  /* 2번 배너 보조 설명 줄간격 */
   line-height:1.4;
 }
 .heroPromo__actions{
@@ -410,7 +425,11 @@ button,input{font:inherit}
   padding-top:8px;
 }
 .heroPromo__btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
   border-radius:24px;
+  /* 1번/2번 배너 버튼 공통 크기 */
   padding:18px 28px;
   font-size:16px;
   font-weight:700;
@@ -576,7 +595,7 @@ button,input{font:inherit}
   background:#9333ea;
 }
 
-/* Preview cards */
+/* Preview cards (1번 슬라이드 우측 카드) */
 .hero__cards{
   flex:0 0 480px;
   display:grid;
@@ -589,6 +608,7 @@ button,input{font:inherit}
 }
 .hero__grid--existing .hero__cards{
   position:absolute;
+  /* 우측 카드 묶음 위치 핵심값: 음수일수록 더 오른쪽 이동 */
   right:-90px;
   top:50%;
   transform:translateY(-50%);
@@ -776,7 +796,7 @@ button,input{font:inherit}
 }
 .step--active h3{color:var(--primary)}
 
-/* Community */
+/* Community (커뮤니티/리뷰 섹션) */
 .community{padding-top:48px; padding-bottom:48px}
 .community__title{
   margin:0 0 4px;
@@ -1054,6 +1074,7 @@ button,input{font:inherit}
   }
   .hero__grid{
     display:flex;
+    /* 태블릿 구간 좌우 블록 간격 */
     gap:20px;
     padding-right:10px;
   }
@@ -1070,6 +1091,7 @@ button,input{font:inherit}
     margin-left:auto;
   }
   .hero__grid--existing .hero__cards{
+    /* 태블릿에서도 우측 카드 이동값 유지 */
     right:-90px;
   }
   .hero__copy h1{
@@ -1081,14 +1103,17 @@ button,input{font:inherit}
     line-height:48px;
   }
   .hero__titleTwoLine > span:first-child{
+    /* 태블릿: 1번 배너 첫 줄 제목 크기 */
     font-size:50px;
     line-height:54px;
   }
   .hero__titleTwoLine > span:last-child{
+    /* 태블릿: 1번 배너 둘째 줄 제목 크기 */
     font-size:35px;
     line-height:40px;
   }
   .hero__desc{
+    /* 태블릿: 1번 배너 보조 설명 크기/줄간격 */
     font-size:20px;
     line-height:1.4;
   }

@@ -57,7 +57,7 @@ export default function Header({
           <a className={englishLinkClass} href="#/english-detail">
             영어 폰트
           </a>
-          <a className="nav__link" href="#">
+          <a className="nav__link" href="#/handwriting">
             손글씨
           </a>
         </div>

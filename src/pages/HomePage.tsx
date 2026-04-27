@@ -67,8 +67,10 @@ export default function HomePage() {
             <span className="hero__blob hero__blob--c" />
           </div>
 
+          {/* 메인 상단 슬라이더 컨테이너 */}
           <div className="heroSlideFrame">
             {currentSlide === 'existing' ? (
+              // Slide 1: 메인 배너(텍스트/우측 카드)
               <div className="hero__grid hero__grid--existing">
               <div className="hero__copy">
                 <span className="hero__tag">GOOGLE FONTS CONVERT</span>
@@ -82,7 +84,6 @@ export default function HomePage() {
                   <br />
                   <span className="nowrap">당신의 프로젝트에 딱 맞는 스타일을 찾아보세요.</span>
                   <br />
-                  지금 바로 시작할 수 있습니다.
                 </p>
 
                 <div className="hero__actions">
@@ -104,6 +105,7 @@ export default function HomePage() {
                 </div>
               </div>
 
+              {/* Slide 1 우측 카드: 카드 문구/샘플 폰트 수정 지점 */}
               <div className="hero__cards" aria-label="미리보기">
                 <a className="pv" href="#/english-detail">
                   <header className="pv__top">
@@ -181,8 +183,15 @@ export default function HomePage() {
                   가장 따뜻한 기술로 완성하는 나만의 서체 라이브러리.
                 </p>
 
+                {/* Slide 2 CTA 버튼: 라우팅/문구 수정 지점 */}
                 <div className="heroPromo__actions">
-                  <button className="heroPromo__btn heroPromo__btn--primary" type="button">
+                  <button
+                    className="heroPromo__btn heroPromo__btn--primary"
+                    type="button"
+                    onClick={() => {
+                      window.location.hash = '#/handwriting';
+                    }}
+                  >
                     나만의 폰트 만들기
                   </button>
                   <button className="heroPromo__btn heroPromo__btn--ghost" type="button">
@@ -200,6 +209,7 @@ export default function HomePage() {
                 </div>
               </div>
 
+              {/* Slide 2 우측 카드: 타이틀/배지/칩 수정 지점 */}
               <div className="heroPromo__right">
                 <div className="heroPromo__card">
                   <p className="heroPromo__cardEyebrow">PREVIEW MODE</p>
@@ -379,6 +389,7 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* 커뮤니티/리뷰: 카드 내용 + 스크롤 단계 노출 인터랙션 대상 */}
         <section ref={communityRef} className="container section community">
           <div className="section__head">
             <div>

@@ -3,8 +3,9 @@ import HomePage from './pages/HomePage';
 import EnglishDetailPage from './pages/EnglishDetailPage';
 import SelectedPage from './pages/SelectedPage';
 import MyPage from './pages/MyPage';
+import HandwritingPage from './pages/HandwritingPage';
 
-type Route = 'home' | 'english-detail' | 'selected' | 'my-page';
+type Route = 'home' | 'english-detail' | 'selected' | 'my-page' | 'handwriting';
 
 function routeFromHash(hash: string): Route {
   const normalized = (hash || '').trim();
@@ -17,6 +18,7 @@ function routeFromHash(hash: string): Route {
     if (path === 'english-detail') return 'english-detail';
     if (path === 'selected') return 'selected';
     if (path === 'my-page') return 'my-page';
+    if (path === 'handwriting') return 'handwriting';
     return 'home';
   }
 
@@ -37,6 +39,7 @@ export default function App() {
     if (route === 'english-detail') return <EnglishDetailPage />;
     if (route === 'selected') return <SelectedPage />;
     if (route === 'my-page') return <MyPage />;
+    if (route === 'handwriting') return <HandwritingPage />;
     return <HomePage />;
   }, [route]);
 
