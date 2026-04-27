@@ -28,6 +28,7 @@ React Router 없이 **URL 해시** 만으로 화면을 전환합니다.
 - `#/selected` → 선택 상세 페이지
 - `#/my-page` → 마이페이지
 - `#/handwriting` → 손글씨 제작 페이지
+- `#/login` → 로그인 페이지
 
 라우팅 로직: `src/App.tsx` 한 파일에서 해시를 읽어서 각 페이지 컴포넌트를 선택합니다.
 
@@ -66,7 +67,8 @@ src/
 │  ├─ EnglishDetailPage.tsx
 │  ├─ SelectedPage.tsx
 │  ├─ MyPage.tsx
-│  └─ HandwritingPage.tsx
+│  ├─ HandwritingPage.tsx
+│  └─ LoginPage.tsx
 ├─ components/   # 공통 UI
 │  ├─ Header.tsx
 │  └─ Footer.tsx
@@ -77,7 +79,8 @@ src/
       ├─ english-detail.css
       ├─ selected.css
       ├─ my-page.css
-      └─ handwriting.css
+      ├─ handwriting.css
+      └─ login.css
 ```
 
 ### 정적 파일 (`public/`)

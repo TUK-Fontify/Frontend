@@ -40,10 +40,10 @@ export default function Header({
           <button className="search__icon" aria-label="검색" />
         </div>
 
-        <button className="btn btn--outline" type="button">
+        <a className="btn btn--outline" href="#/login">
           <span className="btn__icon" aria-hidden="true" />
           로그인
-        </button>
+        </a>
       </div>
 
       <nav className="container header__nav">
