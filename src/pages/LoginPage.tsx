@@ -52,12 +52,26 @@ export default function LoginPage() {
               <br />
               Fontify의 서비스를 이용하실 수 있습니다
             </p>
-            <button type="button">
+            <button className="figmaLogin__googleButton" type="button">
               <span className="figmaLogin__googleIcon" aria-hidden="true">
                 G
               </span>
               Continue with Google
             </button>
+            <div className="figmaLogin__divider" aria-hidden="true" />
+            <form className="figmaLogin__newsletter">
+              <label htmlFor="newsletter-email">Fontify 뉴스레터</label>
+              <input
+                id="newsletter-email"
+                name="email"
+                type="email"
+                placeholder="이메일 주소를 입력하세요"
+                autoComplete="email"
+              />
+              <button className="figmaLogin__newsletterButton" type="submit">
+                Fontify 뉴스레터 받아보기
+              </button>
+            </form>
           </article>
 
           <p className="figmaLogin__terms">

@@ -231,8 +231,9 @@
   background: rgba(255, 255, 255, 0.9);
   box-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.08);
   backdrop-filter: blur(2px);
-  padding: 49px;
+  padding: 49px 49px 54px;
   text-align: center;
+  transform: translateY(80px);
 }
 
 .figmaLogin__card h2 {
@@ -250,7 +251,7 @@
   line-height: 1.45;
 }
 
-.figmaLogin__card button {
+.figmaLogin__googleButton {
   margin-top: 40px;
   width: 100%;
   height: 60px;
@@ -267,6 +268,74 @@
   cursor: pointer;
 }
 
+.figmaLogin__divider {
+  width: 100%;
+  height: 1px;
+  margin: 28px 0 24px;
+  background: linear-gradient(
+    90deg,
+    rgba(226, 232, 240, 0),
+    rgba(226, 232, 240, 0.9) 18%,
+    rgba(226, 232, 240, 0.9) 82%,
+    rgba(226, 232, 240, 0)
+  );
+}
+
+.figmaLogin__newsletter {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: left;
+}
+
+.figmaLogin__newsletter label {
+  color: #64748b;
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 700;
+}
+
+.figmaLogin__newsletter input {
+  width: 100%;
+  height: 52px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: rgba(248, 250, 252, 0.85);
+  color: #0f172a;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 0 16px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.figmaLogin__newsletter input::placeholder {
+  color: #cbd5e1;
+  font-weight: 500;
+}
+
+.figmaLogin__newsletter input:focus {
+  border-color: #93c5fd;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(147, 197, 253, 0.18);
+}
+
+.figmaLogin__newsletterButton {
+  width: 100%;
+  height: 54px;
+  border: 0;
+  border-radius: 12px;
+  background: #2563eb;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 14px 24px -16px rgba(37, 99, 235, 0.8);
+}
+
 .figmaLogin__googleIcon {
   color: #ea4335;
   font-weight: 800;
@@ -275,7 +344,7 @@
 }
 
 .figmaLogin__terms {
-  margin: 47px 0 0;
+  margin: 127px 0 0;
   text-align: center;
   color: #94a3b8;
   font-size: 11px;
