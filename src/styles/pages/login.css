@@ -34,7 +34,7 @@
 .figmaLogin__main {
   min-height: calc(100svh - 108px);
   display: grid;
-  grid-template-columns: 1fr 699px;
+  grid-template-columns: 1fr 799px;
 }
 
 .figmaLogin__left {
