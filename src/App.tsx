@@ -5,6 +5,7 @@ import SelectedPage from './pages/SelectedPage';
 import MyPage from './pages/MyPage';
 import HandwritingPage from './pages/HandwritingPage';
 import LoginPage from './pages/LoginPage';
+import ReviewPage from './pages/ReviewPage';
 
 type Route =
   | 'home'
@@ -12,7 +13,8 @@ type Route =
   | 'selected'
   | 'my-page'
   | 'handwriting'
-  | 'login';
+  | 'login'
+  | 'reviews';
 
 function routeFromHash(hash: string): Route {
   const normalized = (hash || '').trim();
@@ -27,6 +29,7 @@ function routeFromHash(hash: string): Route {
     if (path === 'my-page') return 'my-page';
     if (path === 'handwriting') return 'handwriting';
     if (path === 'login') return 'login';
+    if (path === 'reviews') return 'reviews';
     return 'home';
   }
 
@@ -49,6 +52,7 @@ export default function App() {
     if (route === 'my-page') return <MyPage />;
     if (route === 'handwriting') return <HandwritingPage />;
     if (route === 'login') return <LoginPage />;
+    if (route === 'reviews') return <ReviewPage />;
     return <HomePage />;
   }, [route]);
 

@@ -14,11 +14,12 @@ type StatCardProps = {
   label: string;
   value: string;
   iconVariant?: 'default' | 'darkOnWhite';
+  href?: string;
 };
 
-function StatCard({ iconSrc, label, value, iconVariant }: StatCardProps) {
-  return (
-    <div className="mypage__statCard">
+function StatCard({ iconSrc, label, value, iconVariant, href }: StatCardProps) {
+  const content = (
+    <>
       <img
         className={`mypage__statIcon ${
           iconVariant === 'darkOnWhite' ? 'mypage__statIcon--darkOnWhite' : ''
@@ -28,6 +29,20 @@ function StatCard({ iconSrc, label, value, iconVariant }: StatCardProps) {
       />
       <div className="mypage__statLabel">{label}</div>
       <div className="mypage__statValue">{value}</div>
+    </>
+  );
+
+  if (href) {
+    return (
+      <a className="mypage__statCard mypage__statCard--link" href={href}>
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <div className="mypage__statCard">
+      {content}
     </div>
   );
 }
@@ -94,6 +109,7 @@ export default function MyPage() {
                 iconSrc={statReviewIconSrc}
                 label="작성한 리뷰"
                 value="28"
+                href="#/reviews"
               />
               <StatCard
                 iconSrc={statOwnedIconSrc}

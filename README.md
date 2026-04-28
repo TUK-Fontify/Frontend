@@ -27,6 +27,7 @@ React Router 없이 **URL 해시** 만으로 화면을 전환합니다.
 - `#/english-detail` → 영어 상세 페이지
 - `#/selected` → 선택 상세 페이지
 - `#/my-page` → 마이페이지
+- `#/reviews` → 리뷰 관리 페이지
 - `#/handwriting` → 손글씨 제작 페이지
 - `#/login` → 로그인 페이지
 
@@ -67,6 +68,7 @@ src/
 │  ├─ EnglishDetailPage.tsx
 │  ├─ SelectedPage.tsx
 │  ├─ MyPage.tsx
+│  ├─ ReviewPage.tsx
 │  ├─ HandwritingPage.tsx
 │  └─ LoginPage.tsx
 ├─ components/   # 공통 UI
@@ -79,6 +81,7 @@ src/
       ├─ english-detail.css
       ├─ selected.css
       ├─ my-page.css
+      ├─ review.css
       ├─ handwriting.css
       └─ login.css
 ```
@@ -107,4 +110,3 @@ public/
 - `/images/my-page/font-card-plus-icon.svg` (마이페이지 폰트 카드)
 
 배너/페이지 이미지는 모두 `public/images/...` 기준으로 참조합니다.
-

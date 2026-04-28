@@ -9,6 +9,97 @@ const COMMUNITY_TILE_COUNT = 10;
 const bannerAvatar1 = '/images/my-page/activity-like-icon.svg';
 const bannerAvatar2 = '/images/my-page/activity-owned-font-icon.svg';
 
+type HomeFontCardData = {
+  name: string;
+  source: string;
+  sample: string;
+  fontFamily: string;
+  description: string;
+};
+
+const popularFonts: HomeFontCardData[] = [
+  {
+    name: 'Ubuntu',
+    source: '구글',
+    sample: 'merry ch…',
+    fontFamily: 'Ubuntu, sans-serif',
+    description: '둥근 인상과 단단한 획이 어울려 서비스 타이틀과 배너에 쓰기 좋은 산세리프입니다.',
+  },
+  {
+    name: 'Merryweather',
+    source: '구글',
+    sample: 'merry chri…',
+    fontFamily: 'Merriweather, serif',
+    description: '긴 문장에서도 안정적인 리듬을 주는 세리프 폰트로, 소개글과 에디토리얼 문맥에 잘 맞습니다.',
+  },
+  {
+    name: 'Playfair',
+    source: '구글',
+    sample: 'merry chr…',
+    fontFamily: "'Playfair Display', serif",
+    description: '대비가 큰 획과 우아한 곡선이 특징이라 브랜드 헤드라인이나 고급스러운 카드에 잘 어울립니다.',
+  },
+  {
+    name: 'Lato',
+    source: '구글',
+    sample: 'merry chri…',
+    fontFamily: 'Lato, sans-serif',
+    description: '부드럽고 중립적인 인상이 강해 본문, 버튼, 대시보드 UI에 부담 없이 사용할 수 있습니다.',
+  },
+];
+
+const recommendedFonts: HomeFontCardData[] = [
+  {
+    name: 'Ubuntu',
+    source: '구글',
+    sample: 'merry ch…',
+    fontFamily: 'Ubuntu, sans-serif',
+    description: '프로덕트 화면에서 개성을 조금 더하고 싶을 때 쓰기 좋은 균형 잡힌 폰트입니다.',
+  },
+  {
+    name: 'Merryweather',
+    source: '구글',
+    sample: 'merry chri…',
+    fontFamily: 'Merriweather, serif',
+    description: '차분한 무게감이 있어 블로그, 리뷰, 긴 설명이 많은 화면에서 읽기 흐름을 안정시킵니다.',
+  },
+  {
+    name: 'Playfair',
+    source: '구글',
+    sample: 'merry chr…',
+    fontFamily: "'Playfair Display', serif",
+    description: '짧은 문구를 강하게 보여주는 데 강점이 있어 포스터형 배너와 프리미엄 무드에 적합합니다.',
+  },
+  {
+    name: 'Lato',
+    source: '구글',
+    sample: 'merry chri…',
+    fontFamily: 'Lato, sans-serif',
+    description: '가독성과 친근함이 좋아 다양한 화면에서 기본 UI 폰트처럼 자연스럽게 녹아듭니다.',
+  },
+];
+
+function HomeFontCard({ font }: { font: HomeFontCardData }) {
+  return (
+    <a className="font-card font-card--link" href="#/selected">
+      <div className="font-card__top">
+        <span className="font-card__name">{font.name}</span>
+        <span className="pill">{font.source}</span>
+      </div>
+      <div className="font-card__sample" style={{ fontFamily: font.fontFamily }}>
+        {font.sample}
+      </div>
+      <div className="font-card__popover" role="tooltip">
+        <strong>{font.name}</strong>
+        <div className="font-card__popoverSample" style={{ fontFamily: font.fontFamily }}>
+          {font.sample}
+        </div>
+        <p>{font.description}</p>
+      </div>
+    </a>
+  );
+}
+
 export default function HomePage() {
   const [slideIndex, setSlideIndex] = useState(0);
   const [visibleCommunityCount, setVisibleCommunityCount] = useState(0);
@@ -258,45 +349,9 @@ export default function HomePage() {
           </div>
 
           <div className="cards cards--4">
-            <a className="font-card font-card--link" href="#/selected">
-              <div className="font-card__top">
-                <span className="font-card__name">Ubuntu</span>
-                <span className="pill">구글</span>
-              </div>
-              <div className="font-card__sample" style={{ fontFamily: 'Ubuntu, sans-serif' }}>
-                merry ch…
-              </div>
-            </a>
-
-            <a className="font-card font-card--link" href="#/selected">
-              <div className="font-card__top">
-                <span className="font-card__name">Merryweather</span>
-                <span className="pill">구글</span>
-              </div>
-              <div className="font-card__sample" style={{ fontFamily: 'Merriweather, serif' }}>
-                merry chri…
-              </div>
-            </a>
-
-            <a className="font-card font-card--link" href="#/selected">
-              <div className="font-card__top">
-                <span className="font-card__name">Playfair</span>
-                <span className="pill">구글</span>
-              </div>
-              <div className="font-card__sample" style={{ fontFamily: "'Playfair Display', serif" }}>
-                merry chr…
-              </div>
-            </a>
-
-            <a className="font-card font-card--link" href="#/selected">
-              <div className="font-card__top">
-                <span className="font-card__name">Lato</span>
-                <span className="pill">구글</span>
-              </div>
-              <div className="font-card__sample" style={{ fontFamily: 'Lato, sans-serif' }}>
-                merry chri…
-              </div>
-            </a>
+            {popularFonts.map((font) => (
+              <HomeFontCard key={`popular-${font.name}`} font={font} />
+            ))}
           </div>
         </section>
 
@@ -312,45 +367,9 @@ export default function HomePage() {
           </div>
 
           <div className="cards cards--4">
-            <a className="font-card font-card--link" href="#/selected">
-              <div className="font-card__top">
-                <span className="font-card__name">Ubuntu</span>
-                <span className="pill">구글</span>
-              </div>
-              <div className="font-card__sample" style={{ fontFamily: 'Ubuntu, sans-serif' }}>
-                merry ch…
-              </div>
-            </a>
-
-            <a className="font-card font-card--link" href="#/selected">
-              <div className="font-card__top">
-                <span className="font-card__name">Merryweather</span>
-                <span className="pill">구글</span>
-              </div>
-              <div className="font-card__sample" style={{ fontFamily: 'Merriweather, serif' }}>
-                merry chri…
-              </div>
-            </a>
-
-            <a className="font-card font-card--link" href="#/selected">
-              <div className="font-card__top">
-                <span className="font-card__name">Playfair</span>
-                <span className="pill">구글</span>
-              </div>
-              <div className="font-card__sample" style={{ fontFamily: "'Playfair Display', serif" }}>
-                merry chr…
-              </div>
-            </a>
-
-            <a className="font-card font-card--link" href="#/selected">
-              <div className="font-card__top">
-                <span className="font-card__name">Lato</span>
-                <span className="pill">구글</span>
-              </div>
-              <div className="font-card__sample" style={{ fontFamily: 'Lato, sans-serif' }}>
-                merry chri…
-              </div>
-            </a>
+            {recommendedFonts.map((font) => (
+              <HomeFontCard key={`recommend-${font.name}`} font={font} />
+            ))}
           </div>
         </section>
 

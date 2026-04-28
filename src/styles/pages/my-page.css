@@ -105,6 +105,12 @@
     border-color .18s ease;
 }
 
+.mypage__statCard--link{
+  color:inherit;
+  text-decoration:none;
+  cursor:pointer;
+}
+
 .mypage__statCard--primary{
   /* No longer used as default state. Kept for compatibility. */
   background:#fff;
