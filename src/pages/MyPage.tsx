@@ -3,7 +3,6 @@ import Header from '../components/Header';
 
 const avatarSrc = '/images/my-page/profile-avatar.png';
 
-// Icons exported from Figma via the local assets server.
 const statLikeIconSrc = '/images/my-page/activity-like-icon.svg';
 const statReviewIconSrc = '/images/my-page/activity-review-icon.png';
 const statOwnedIconSrc = '/images/my-page/activity-owned-font-icon.svg';
@@ -40,11 +39,7 @@ function StatCard({ iconSrc, label, value, iconVariant, href }: StatCardProps) {
     );
   }
 
-  return (
-    <div className="mypage__statCard">
-      {content}
-    </div>
-  );
+  return <div className="mypage__statCard">{content}</div>;
 }
 
 type FontCardProps = {
@@ -91,7 +86,13 @@ export default function MyPage() {
             <div className="mypage__name">폰티파이님</div>
             <div className="mypage__sub">Fontify와 함께한지 124일째</div>
 
-            <button className="mypage__editBtn" type="button" onClick={() => { window.location.hash = '#/profile-edit'; }}>
+            <button
+              className="mypage__editBtn"
+              type="button"
+              onClick={() => {
+                window.location.hash = '#/profile-edit';
+              }}
+            >
               프로필 수정
             </button>
           </section>
@@ -100,11 +101,7 @@ export default function MyPage() {
             <h2 className="mypage__sectionTitle">나의 활동</h2>
 
             <div className="mypage__cards3">
-              <StatCard
-                iconSrc={statLikeIconSrc}
-                label="좋아요"
-                value="14"
-              />
+              <StatCard iconSrc={statLikeIconSrc} label="좋아요" value="14" />
               <StatCard
                 iconSrc={statReviewIconSrc}
                 label="작성한 리뷰"
@@ -113,8 +110,8 @@ export default function MyPage() {
               />
               <StatCard
                 iconSrc={statOwnedIconSrc}
-                label="보유 폰트"
-                value="5"
+                label="작업중인 폰트"
+                value="1"
                 iconVariant="darkOnWhite"
               />
             </div>
@@ -123,7 +120,7 @@ export default function MyPage() {
           <section className="mypage__section">
             <div className="mypage__viewRow">
               <h2 className="mypage__sectionTitle mypage__sectionTitle--tight">
-                관심 폰트
+                보유 폰트
               </h2>
               <a className="mypage__viewAll" href="#/selected">
                 전체보기
@@ -132,9 +129,9 @@ export default function MyPage() {
 
             <div className="mypage__grid4">
               <FontCard
-                title="Aa바닐라라떼"
+                title="Aa바른고딕"
                 kind="무료"
-                company="우아한형제들"
+                company="디자인스튜디오"
                 sampleFontFamily="'WenQuanYi Zen Hei', sans-serif"
               />
               <FontCard
@@ -144,16 +141,16 @@ export default function MyPage() {
                 sampleFontFamily="'Nanum Myeongjo', serif"
               />
               <FontCard
-                title="카페24 쑥쑥"
+                title="카페24 써라운드"
                 kind="유료"
                 company="카페24"
-                sampleFontFamily="'Cafe24Ssurround', sans-serif"
+                sampleFontFamily="'Pretendard', sans-serif"
               />
               <FontCard
                 title="Lv1"
                 kind="무료"
                 company="NEXON"
-                sampleFontFamily="'Nimbus Sans', sans-serif"
+                sampleFontFamily="'Pretendard', sans-serif"
               />
             </div>
           </section>
@@ -164,4 +161,3 @@ export default function MyPage() {
     </>
   );
 }
-
