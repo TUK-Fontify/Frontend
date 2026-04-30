@@ -91,7 +91,7 @@ export default function MyPage() {
             <div className="mypage__name">폰티파이님</div>
             <div className="mypage__sub">Fontify와 함께한지 124일째</div>
 
-            <button className="mypage__editBtn" type="button">
+            <button className="mypage__editBtn" type="button" onClick={() => { window.location.hash = '#/profile-edit'; }}>
               프로필 수정
             </button>
           </section>

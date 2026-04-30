@@ -510,6 +510,42 @@ button,input{font:inherit}
   border:1px solid rgba(255,255,255,.4);
   box-shadow:0 25px 50px -12px rgba(0,0,0,.25);
   transform:rotate(2deg);
+  animation:heroPromoCardFloat 6.4s ease-in-out infinite;
+  will-change:transform;
+}
+
+@keyframes heroPromoCardFloat {
+  0%, 100% {
+    transform:translate3d(0, 0, 0) rotate(2deg);
+  }
+  50% {
+    transform:translate3d(0, -14px, 0) rotate(0.5deg);
+  }
+}
+
+@keyframes heroPromoBadgeFloat {
+  0%, 100% {
+    transform:translate3d(0, 0, 0);
+  }
+  50% {
+    transform:translate3d(0, -10px, 0);
+  }
+}
+
+@keyframes heroPromoChipFloat {
+  0%, 100% {
+    transform:translate3d(0, 0, 0) rotate(-12deg);
+  }
+  50% {
+    transform:translate3d(0, -12px, 0) rotate(-9deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .heroPromo__card,
+  .heroPromo__floating{
+    animation:none;
+  }
 }
 .heroPromo__cardEyebrow{
   margin:0;
@@ -558,6 +594,8 @@ button,input{font:inherit}
   background:rgba(255,255,255,.82);
   border:1px solid rgba(255,255,255,.4);
   box-shadow:0 20px 25px -5px rgba(0,0,0,.1), 0 8px 10px -6px rgba(0,0,0,.1);
+  animation:heroPromoBadgeFloat 5.6s ease-in-out infinite;
+  will-change:transform;
 }
 .heroPromo__floating--badge{
   top:28px;
@@ -579,6 +617,9 @@ button,input{font:inherit}
   font-weight:600;
   color:#475569;
   white-space:nowrap;
+  animation-name:heroPromoChipFloat;
+  animation-duration:6.9s;
+  animation-delay:-1.8s;
 }
 .heroBanner__dots{
   margin-top:28px;
