@@ -1143,6 +1143,10 @@ button,input{font:inherit}
   display:inline-block;
   text-decoration:none;
 }
+.chip--top10::after{
+  content:"\2192";
+  margin-left:8px;
+}
 
 .footer__head{
   font-size:14px;

@@ -343,7 +343,7 @@ export default function HomePage() {
               <h2>인기 폰트</h2>
               <span>(다운로드 순)</span>
             </div>
-            <a className="chip" href="#">
+            <a className="chip chip--top10" href="#/top10">
               인기 폰트
             </a>
           </div>

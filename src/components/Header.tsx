@@ -1,24 +1,18 @@
 type HeaderProps = {
-  /**
-   * activeNav:
-   * - 'english': 영어 폰트 링크 활성
-   * - 'my': 마이 폰트 링크 활성
-   */
-  activeNav?: 'english' | 'my' | 'none';
-  variant?: 'home' | 'english-detail' | 'selected';
+  activeNav?: 'popular' | 'english' | 'my' | 'none';
+  variant?: 'home' | 'english-detail' | 'selected' | 'top10';
 };
 
 export default function Header({
   activeNav = 'none',
   variant = 'home',
 }: HeaderProps) {
-  // Note: `variant`는 Next에서 사용되던 해시 링크 스타일 용도였으나,
-  // React에선 화면 전환(라우트)은 전부 `#/...`로 통일합니다.
   void variant;
 
+  const popularLinkClass =
+    activeNav === 'popular' ? 'nav__link nav__link--active' : 'nav__link';
   const englishLinkClass =
     activeNav === 'english' ? 'nav__link nav__link--active' : 'nav__link';
-
   const myLinkClass =
     activeNav === 'my'
       ? 'nav__link nav__link--active'
@@ -48,7 +42,7 @@ export default function Header({
 
       <nav className="container header__nav">
         <div className="nav">
-          <a className="nav__link" href="#popular">
+          <a className={popularLinkClass} href="#/top10">
             인기 폰트(다운로드 순)
           </a>
           <a className="nav__link" href="#recommend">
@@ -69,4 +63,3 @@ export default function Header({
     </header>
   );
 }
-
