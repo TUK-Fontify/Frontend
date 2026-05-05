@@ -8,6 +8,7 @@ import LoginPage from './pages/LoginPage';
 import ReviewPage from './pages/ReviewPage';
 import ProfileEditPage from './pages/ProfileEditPage';
 import Top10Page from './pages/Top10Page';
+import EnglishFontsPage from './pages/EnglishFontsPage';
 
 type Route =
   | 'home'
@@ -18,7 +19,8 @@ type Route =
   | 'login'
   | 'reviews'
   | 'profile-edit'
-  | 'top10';
+  | 'top10'
+  | 'english-fonts';
 
 function routeFromHash(hash: string): Route {
   const normalized = (hash || '').trim();
@@ -36,6 +38,7 @@ function routeFromHash(hash: string): Route {
     if (path === 'reviews') return 'reviews';
     if (path === 'profile-edit') return 'profile-edit';
     if (path === 'top10') return 'top10';
+    if (path === 'english-fonts') return 'english-fonts';
     return 'home';
   }
 
@@ -61,6 +64,7 @@ export default function App() {
     if (route === 'reviews') return <ReviewPage />;
     if (route === 'profile-edit') return <ProfileEditPage />;
     if (route === 'top10') return <Top10Page />;
+    if (route === 'english-fonts') return <EnglishFontsPage />;
     return <HomePage />;
   }, [route]);
 

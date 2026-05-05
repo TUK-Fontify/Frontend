@@ -1,6 +1,6 @@
 type HeaderProps = {
   activeNav?: 'popular' | 'english' | 'my' | 'none';
-  variant?: 'home' | 'english-detail' | 'selected' | 'top10';
+  variant?: 'home' | 'english-detail' | 'selected' | 'top10' | 'english-fonts';
 };
 
 export default function Header({
@@ -48,7 +48,7 @@ export default function Header({
           <a className="nav__link" href="#recommend">
             추천 폰트(만족도 높은 순)
           </a>
-          <a className={englishLinkClass} href="#/english-detail">
+          <a className={englishLinkClass} href="#/english-fonts">
             영어 폰트
           </a>
           <a className="nav__link" href="#/handwriting">
