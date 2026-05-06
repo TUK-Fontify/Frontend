@@ -1,180 +1,19 @@
 import { useMemo, useState } from 'react';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
-
-type FilterKey = 'Serif' | 'Sans Serif' | 'Handwriting' | 'Display';
-type SortKey = 'popular' | 'latest';
-type ViewMode = 'grid' | 'list';
-type KeywordKey =
-  | '동글동글'
-  | '사무적인'
-  | '보고서'
-  | '날려쓰는'
-  | '게임틱한'
-  | '문서';
-
-type FontCard = {
-  id: string;
-  name: string;
-  creator: string;
-  previewFamily: string;
-  type: FilterKey;
-  preview: string;
-  tags: KeywordKey[];
-};
+import { fontFilters, fontKeywordOptions, mockEnglishFonts } from '../mocks/englishFonts';
+import type {
+  FontFilterKey,
+  FontKeywordKey,
+  FontSortKey,
+  FontViewMode,
+} from '../types/font';
 
 const planeIcon =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%2323c3e6' d='M0 185c0-21 14-40 35-46L471 1c27-8 52 17 44 44L377 477c-6 21-25 35-46 35-24 0-45-16-51-39l-59-189L32 236C13 231 0 214 0 193v-8z'/%3E%3Cpath fill='%2336a2e6' d='M221 284l294-239-138 432c-6 21-25 35-46 35-24 0-45-16-51-39l-59-189z'/%3E%3C/svg%3E";
 
-const filters: FilterKey[] = ['Serif', 'Sans Serif', 'Handwriting', 'Display'];
-const keywordOptions: KeywordKey[] = [
-  '동글동글',
-  '사무적인',
-  '보고서',
-  '날려쓰는',
-  '게임틱한',
-  '문서',
-];
 
-const fonts: FontCard[] = [
-  {
-    id: 'montserrat',
-    name: 'Montserrat Bold',
-    creator: 'Julieta Ulanovsky',
-    previewFamily: 'Montserrat, Pretendard, sans-serif',
-    type: 'Sans Serif',
-    preview: 'Font Preview',
-    tags: ['동글동글', '문서'],
-  },
-  {
-    id: 'pacifico',
-    name: 'Pacifico Regular',
-    creator: 'Vernon Adams',
-    previewFamily: 'Pacifico, cursive',
-    type: 'Handwriting',
-    preview: 'Font Preview',
-    tags: ['게임틱한', '날려쓰는'],
-  },
-  {
-    id: 'playfair',
-    name: 'Playfair Display',
-    creator: 'Claus Eggers',
-    previewFamily: "'Playfair Display', Georgia, serif",
-    type: 'Serif',
-    preview: 'Font Preview',
-    tags: ['사무적인', '보고서'],
-  },
-  {
-    id: 'roboto-light',
-    name: 'Roboto Light',
-    creator: 'Christian Robertson',
-    previewFamily: 'Roboto, Pretendard, sans-serif',
-    type: 'Sans Serif',
-    preview: 'Font Preview',
-    tags: ['문서'],
-  },
-  {
-    id: 'open-sans',
-    name: 'Open Sans',
-    creator: 'Steve Matteson',
-    previewFamily: "'Open Sans', Pretendard, sans-serif",
-    type: 'Sans Serif',
-    preview: 'Font Preview',
-    tags: ['동글동글'],
-  },
-  {
-    id: 'lora',
-    name: 'Lora Regular',
-    creator: 'Cyreal',
-    previewFamily: 'Lora, Georgia, serif',
-    type: 'Serif',
-    preview: 'Font Preview',
-    tags: ['보고서'],
-  },
-  {
-    id: 'dancing-script',
-    name: 'Dancing Script',
-    creator: 'Pablo Impallari',
-    previewFamily: "'Dancing Script', cursive",
-    type: 'Handwriting',
-    preview: 'Font Preview',
-    tags: ['날려쓰는'],
-  },
-  {
-    id: 'arimo-bold',
-    name: 'Arimo Bold',
-    creator: 'Steve Matteson',
-    previewFamily: 'Arimo, Pretendard, sans-serif',
-    type: 'Sans Serif',
-    preview: 'Font Preview',
-    tags: ['사무적인'],
-  },
-  {
-    id: 'press-start',
-    name: 'Press Start 2P',
-    creator: 'CodeMan38',
-    previewFamily: "'Press Start 2P', monospace",
-    type: 'Display',
-    preview: 'Font Preview',
-    tags: ['게임틱한'],
-  },
-  {
-    id: 'quicksand',
-    name: 'Quicksand',
-    creator: 'Andrew Paglinawan',
-    previewFamily: 'Quicksand, Pretendard, sans-serif',
-    type: 'Sans Serif',
-    preview: 'Font Preview',
-    tags: ['동글동글'],
-  },
-  {
-    id: 'libre-baskerville',
-    name: 'Libre Baskerville',
-    creator: 'Impallari Type',
-    previewFamily: "'Libre Baskerville', Georgia, serif",
-    type: 'Serif',
-    preview: 'Font Preview',
-    tags: ['보고서'],
-  },
-  {
-    id: 'noto-sans',
-    name: 'Noto Sans',
-    creator: 'Google',
-    previewFamily: "'Noto Sans', Pretendard, sans-serif",
-    type: 'Sans Serif',
-    preview: 'Font Preview',
-    tags: ['문서'],
-  },
-  {
-    id: 'merriweather',
-    name: 'Merriweather',
-    creator: 'Sorkin Type',
-    previewFamily: 'Merriweather, Georgia, serif',
-    type: 'Serif',
-    preview: 'Font Preview',
-    tags: ['사무적인', '문서'],
-  },
-  {
-    id: 'abril-fatface',
-    name: 'Abril Fatface',
-    creator: 'TypeTogether',
-    previewFamily: "'Abril Fatface', serif",
-    type: 'Display',
-    preview: 'Font Preview',
-    tags: ['게임틱한'],
-  },
-  {
-    id: 'caveat',
-    name: 'Caveat Brush',
-    creator: 'Impallari Type',
-    previewFamily: "'Caveat', cursive",
-    type: 'Handwriting',
-    preview: 'Font Preview',
-    tags: ['날려쓰는', '동글동글'],
-  },
-];
-
-const tagToneMap: Record<KeywordKey, string> = {
+const tagToneMap: Record<FontKeywordKey, string> = {
   동글동글: 'blue',
   사무적인: 'purple',
   보고서: 'green',
@@ -184,17 +23,17 @@ const tagToneMap: Record<KeywordKey, string> = {
 };
 
 export default function EnglishFontsPage() {
-  const [selectedFilters, setSelectedFilters] = useState<FilterKey[]>([]);
-  const [selectedKeywords, setSelectedKeywords] = useState<KeywordKey[]>([]);
-  const [sortBy, setSortBy] = useState<SortKey>('popular');
+  const [selectedFilters, setSelectedFilters] = useState<FontFilterKey[]>([]);
+  const [selectedKeywords, setSelectedKeywords] = useState<FontKeywordKey[]>([]);
+  const [sortBy, setSortBy] = useState<FontSortKey>('popular');
   const [page, setPage] = useState(1);
   const [previewInput, setPreviewInput] = useState('');
   const [previewScale, setPreviewScale] = useState(43);
-  const [viewMode, setViewMode] = useState<ViewMode>('grid');
+  const [viewMode, setViewMode] = useState<FontViewMode>('grid');
   const pageSize = 15;
 
   const filteredFonts = useMemo(() => {
-    let next = fonts.filter((font) => {
+    let next = mockEnglishFonts.filter((font) => {
       const filterMatch =
         selectedFilters.length === 0 || selectedFilters.includes(font.type);
       const keywordMatch =
@@ -221,7 +60,7 @@ export default function EnglishFontsPage() {
   );
   const previewText = previewInput.trim() || 'Font Preview';
 
-  const toggleFilter = (filter: FilterKey) => {
+  const toggleFilter = (filter: FontFilterKey) => {
     setPage(1);
     setSelectedFilters((current) =>
       current.includes(filter)
@@ -230,7 +69,7 @@ export default function EnglishFontsPage() {
     );
   };
 
-  const toggleKeyword = (keyword: KeywordKey) => {
+  const toggleKeyword = (keyword: FontKeywordKey) => {
     setPage(1);
     setSelectedKeywords((current) =>
       current.includes(keyword)
@@ -239,7 +78,7 @@ export default function EnglishFontsPage() {
     );
   };
 
-  const toggleViewMode = (nextMode: ViewMode) => {
+  const toggleViewMode = (nextMode: FontViewMode) => {
     setViewMode(nextMode);
     setSortBy(nextMode === 'grid' ? 'popular' : 'latest');
     setPage(1);
@@ -256,7 +95,7 @@ export default function EnglishFontsPage() {
               <div className="englishFonts__sidebarBlock">
                 <h2 className="englishFonts__sidebarTitle">FILTER</h2>
                 <div className="englishFonts__filterList">
-                  {filters.map((filter) => (
+                  {fontFilters.map((filter) => (
                     <label key={filter} className="englishFonts__checkRow">
                       <input
                         type="checkbox"
@@ -272,7 +111,7 @@ export default function EnglishFontsPage() {
               <div className="englishFonts__sidebarBlock">
                 <h2 className="englishFonts__sidebarTitle">KEYWORDS</h2>
                 <div className="englishFonts__keywordWrap">
-                  {keywordOptions.map((keyword) => (
+                  {fontKeywordOptions.map((keyword) => (
                     <button
                       key={keyword}
                       type="button"

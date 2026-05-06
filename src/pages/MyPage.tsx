@@ -1,39 +1,29 @@
 import Footer from '../components/Footer';
 import Header from '../components/Header';
+import { mockOwnedFonts, mockUserActivityStats, mockUserProfile } from '../mocks/user';
+import type { UserActivityStat } from '../types/user';
+import type { UserOwnedFont } from '../types/font';
 
-const avatarSrc = '/images/my-page/profile-avatar.png';
-
-const statLikeIconSrc = '/images/my-page/activity-like-icon.svg';
-const statReviewIconSrc = '/images/my-page/activity-review-icon.png';
-const statOwnedIconSrc = '/images/my-page/activity-owned-font-icon.svg';
 const fontPlusIconSrc = '/images/my-page/font-card-plus-icon.svg';
 
-type StatCardProps = {
-  iconSrc: string;
-  label: string;
-  value: string;
-  iconVariant?: 'default' | 'darkOnWhite';
-  href?: string;
-};
-
-function StatCard({ iconSrc, label, value, iconVariant, href }: StatCardProps) {
+function StatCard({ stat }: { stat: UserActivityStat }) {
   const content = (
     <>
       <img
         className={`mypage__statIcon ${
-          iconVariant === 'darkOnWhite' ? 'mypage__statIcon--darkOnWhite' : ''
+          stat.iconVariant === 'darkOnWhite' ? 'mypage__statIcon--darkOnWhite' : ''
         }`}
-        src={iconSrc}
+        src={stat.iconSrc}
         alt=""
       />
-      <div className="mypage__statLabel">{label}</div>
-      <div className="mypage__statValue">{value}</div>
+      <div className="mypage__statLabel">{stat.label}</div>
+      <div className="mypage__statValue">{stat.value}</div>
     </>
   );
 
-  if (href) {
+  if (stat.href) {
     return (
-      <a className="mypage__statCard mypage__statCard--link" href={href}>
+      <a className="mypage__statCard mypage__statCard--link" href={stat.href}>
         {content}
       </a>
     );
@@ -42,30 +32,23 @@ function StatCard({ iconSrc, label, value, iconVariant, href }: StatCardProps) {
   return <div className="mypage__statCard">{content}</div>;
 }
 
-type FontCardProps = {
-  title: string;
-  kind: '무료' | '유료';
-  company: string;
-  sampleFontFamily?: string;
-};
-
-function FontCard({ title, kind, company, sampleFontFamily }: FontCardProps) {
+function FontCard({ font }: { font: UserOwnedFont }) {
   const kindClass =
-    kind === '무료' ? 'mypage__fontKind--free' : 'mypage__fontKind--paid';
+    font.kind === '무료' ? 'mypage__fontKind--free' : 'mypage__fontKind--paid';
 
   return (
     <div className="mypage__fontCard">
       <div className="mypage__fontTop">
-        <div className="mypage__fontSample" style={{ fontFamily: sampleFontFamily }}>
-          {title}
+        <div className="mypage__fontSample" style={{ fontFamily: font.sampleFontFamily }}>
+          {font.title}
         </div>
         <img className="mypage__fontPlus" src={fontPlusIconSrc} alt="" />
       </div>
 
       <div className="mypage__fontBottom">
-        <div className={`mypage__fontKind ${kindClass}`}>{kind}</div>
-        <div className="mypage__fontName">{title}</div>
-        <div className="mypage__fontCompany">{company}</div>
+        <div className={`mypage__fontKind ${kindClass}`}>{font.kind}</div>
+        <div className="mypage__fontName">{font.title}</div>
+        <div className="mypage__fontCompany">{font.company}</div>
       </div>
     </div>
   );
@@ -80,11 +63,11 @@ export default function MyPage() {
         <div className="mypage">
           <section className="mypage__profile">
             <div className="mypage__avatarWrap">
-              <img className="mypage__avatar" src={avatarSrc} alt="" />
+              <img className="mypage__avatar" src={mockUserProfile.avatarSrc} alt="" />
             </div>
 
-            <div className="mypage__name">폰티파이님</div>
-            <div className="mypage__sub">Fontify와 함께한지 124일째</div>
+            <div className="mypage__name">{mockUserProfile.name}</div>
+            <div className="mypage__sub">{mockUserProfile.joinedDaysLabel}</div>
 
             <button
               className="mypage__editBtn"
@@ -101,19 +84,9 @@ export default function MyPage() {
             <h2 className="mypage__sectionTitle">나의 활동</h2>
 
             <div className="mypage__cards3">
-              <StatCard iconSrc={statLikeIconSrc} label="좋아요" value="14" />
-              <StatCard
-                iconSrc={statReviewIconSrc}
-                label="작성한 리뷰"
-                value="28"
-                href="#/reviews"
-              />
-              <StatCard
-                iconSrc={statOwnedIconSrc}
-                label="작업중인 폰트"
-                value="1"
-                iconVariant="darkOnWhite"
-              />
+              {mockUserActivityStats.map((stat) => (
+                <StatCard key={stat.id} stat={stat} />
+              ))}
             </div>
           </section>
 
@@ -128,30 +101,9 @@ export default function MyPage() {
             </div>
 
             <div className="mypage__grid4">
-              <FontCard
-                title="Aa바른고딕"
-                kind="무료"
-                company="디자인스튜디오"
-                sampleFontFamily="'WenQuanYi Zen Hei', sans-serif"
-              />
-              <FontCard
-                title="나눔명조"
-                kind="무료"
-                company="네이버"
-                sampleFontFamily="'Nanum Myeongjo', serif"
-              />
-              <FontCard
-                title="카페24 써라운드"
-                kind="유료"
-                company="카페24"
-                sampleFontFamily="'Pretendard', sans-serif"
-              />
-              <FontCard
-                title="Lv1"
-                kind="무료"
-                company="NEXON"
-                sampleFontFamily="'Pretendard', sans-serif"
-              />
+              {mockOwnedFonts.map((font) => (
+                <FontCard key={font.id} font={font} />
+              ))}
             </div>
           </section>
         </div>

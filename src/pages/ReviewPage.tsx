@@ -1,60 +1,12 @@
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-
-type ReviewCard = {
-  title: string;
-  rating: number;
-  sample: string;
-  sampleClass?: string;
-  body: string;
-  date: string;
-  featured?: boolean;
-};
-
-const pendingFonts = [
-  {
-    label: '최근 다운로드',
-    name: 'Gwendolyn Signature',
-    tone: 'primary',
-    mark: 'quote',
-  },
-  {
-    label: '프로젝트: 가을 컬렉션',
-    name: 'Vogue Royale Serif',
-    tone: 'soft',
-    mark: 'lines',
-  },
-] as const;
-
-const reviews: ReviewCard[] = [
-  {
-    title: 'Modern Archive Mono',
-    rating: 5,
-    sample: 'ABCDEFGHIJKLMN\n0123456789',
-    sampleClass: 'reviewSample--mono',
-    body:
-      '기술 문서에 완벽합니다. 작은 크기에서도 가독성이 타의 추종을 불허합니다. 개발자 포털 UI에 사용했는데 반응이 매우 좋았습니다.',
-    date: '2024년 10월 12일 작성',
-  },
-  {
-    title: 'Whisper script Pro',
-    rating: 4,
-    sample: 'Ethereal Moments',
-    sampleClass: 'reviewSample--script',
-    body:
-      '합자가 아름답지만 깔끔한 산세리프와 조합하기는 조금 까다로울 수 있습니다. 웨딩 초대장이나 럭셔리 브랜딩에 탁월합니다.',
-    date: '2024년 9월 28일',
-  },
-  {
-    title: 'Whisper script Pro',
-    rating: 4,
-    sample: 'Ethereal Moments',
-    sampleClass: 'reviewSample--script',
-    body:
-      '합자가 아름답지만 깔끔한 산세리프와 조합하기는 조금 까다로울 수 있습니다. 웨딩 초대장이나 럭셔리 브랜딩에 탁월합니다.',
-    date: '2024년 9월 28일',
-  },
-];
+import {
+  mockFeaturedReview,
+  mockPendingReviewFonts,
+  mockReviewImpact,
+  mockReviews,
+} from '../mocks/reviews';
+import type { PendingReviewFont, ReviewCard } from '../types/review';
 
 function StarRating({ rating }: { rating: number }) {
   return (
@@ -72,7 +24,7 @@ function StarRating({ rating }: { rating: number }) {
   );
 }
 
-function PendingFontCard({ font }: { font: (typeof pendingFonts)[number] }) {
+function PendingFontCard({ font }: { font: PendingReviewFont }) {
   return (
     <article className="pendingCard">
       <div className={`pendingCard__mark pendingCard__mark--${font.mark}`} aria-hidden="true" />
@@ -145,11 +97,11 @@ export default function ReviewPage() {
 
         <section className="reviewPending container" aria-label="리뷰 대기중인 서체">
           <div className="reviewPending__cards">
-            {pendingFonts.map((font) => (
-              <PendingFontCard key={font.name} font={font} />
+            {mockPendingReviewFonts.map((font) => (
+              <PendingFontCard key={font.id} font={font} />
             ))}
             <article className="reviewStatsCard">
-              <strong>04</strong>
+              <strong>{String(mockPendingReviewFonts.length).padStart(2, '0')}</strong>
               <span>피드백 대기 중인 서체</span>
               <div className="reviewStatsCard__bar" aria-hidden="true">
                 <i />
@@ -173,33 +125,34 @@ export default function ReviewPage() {
           </header>
 
           <div className="reviewMasonry">
-            <ReviewItem review={reviews[0]} />
+            <ReviewItem review={mockReviews[0]} />
             <article className="reviewImpactCard">
               <div className="reviewImpactCard__spark" aria-hidden="true">
                 ✦
               </div>
               <h3>리뷰의 영향력</h3>
               <p>
-                회원님의 리뷰가 <strong>3422명 이상의 디자이너</strong>의 프로젝트에 맞는
+                회원님의 리뷰가 <strong>{mockReviewImpact.reachedDesigners}명 이상의 디자이너</strong>의 프로젝트에 맞는
                 서체를 선택하는 데 도움을 주었습니다.
               </p>
               <div className="reviewImpactCard__avatars" aria-hidden="true">
-                <span>AA</span>
-                <span>BB</span>
-                <span>CC</span>
-                <strong>+3.4k</strong>
+                {mockReviewImpact.avatarLabels.map((label) => (
+                  <span key={label}>{label}</span>
+                ))}
+                <strong>{mockReviewImpact.growthLabel}</strong>
               </div>
             </article>
-            <ReviewItem review={reviews[1]} />
-            <ReviewItem review={reviews[2]} />
+            {mockReviews.slice(1).map((review) => (
+              <ReviewItem key={review.id} review={review} />
+            ))}
             <article className="reviewFeatureCard">
               <div>
-                <strong>Vogue Royale</strong>
-                <span>EDITORIAL SAMPLE</span>
+                <strong>{mockFeaturedReview.fontName}</strong>
+                <span>{mockFeaturedReview.label}</span>
               </div>
               <footer>
                 <p>추천 리뷰</p>
-                <h3>현대 에디토리얼 공간에서의 타이포그래피: Vogue Royale 리뷰.</h3>
+                <h3>{mockFeaturedReview.title}</h3>
               </footer>
             </article>
           </div>
