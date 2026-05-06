@@ -1,5 +1,8 @@
 import Footer from '../components/Footer';
 import Header from '../components/Header';
+import { fontifyApi } from '../api/fontifyApi';
+import { mapDownloadToOwnedFont, mapMeToUserProfile, mapUserStats } from '../api/mappers';
+import { useApiResource } from '../hooks/useApiResource';
 import { mockOwnedFonts, mockUserActivityStats, mockUserProfile } from '../mocks/user';
 import type { UserActivityStat } from '../types/user';
 import type { UserOwnedFont } from '../types/font';
@@ -55,6 +58,33 @@ function FontCard({ font }: { font: UserOwnedFont }) {
 }
 
 export default function MyPage() {
+  const { data } = useApiResource(
+    {
+      profile: mockUserProfile,
+      stats: mockUserActivityStats,
+      ownedFonts: mockOwnedFonts,
+    },
+    async () => {
+      const [me, ratings, generations, downloads] = await Promise.all([
+        fontifyApi.getMe(),
+        fontifyApi.getMyRatings(),
+        fontifyApi.getMyGenerations(),
+        fontifyApi.getMyDownloads(),
+      ]);
+
+      return {
+        profile: mapMeToUserProfile(me),
+        stats: mapUserStats({
+          ratingsCount: ratings.length,
+          generationsCount: generations.length,
+          downloadsCount: downloads.length,
+        }),
+        ownedFonts: downloads.map(mapDownloadToOwnedFont),
+      };
+    },
+    [],
+  );
+
   return (
     <>
       <Header variant="home" activeNav="my" />
@@ -63,11 +93,11 @@ export default function MyPage() {
         <div className="mypage">
           <section className="mypage__profile">
             <div className="mypage__avatarWrap">
-              <img className="mypage__avatar" src={mockUserProfile.avatarSrc} alt="" />
+              <img className="mypage__avatar" src={data.profile.avatarSrc} alt="" />
             </div>
 
-            <div className="mypage__name">{mockUserProfile.name}</div>
-            <div className="mypage__sub">{mockUserProfile.joinedDaysLabel}</div>
+            <div className="mypage__name">{data.profile.name}</div>
+            <div className="mypage__sub">{data.profile.joinedDaysLabel}</div>
 
             <button
               className="mypage__editBtn"
@@ -84,7 +114,7 @@ export default function MyPage() {
             <h2 className="mypage__sectionTitle">나의 활동</h2>
 
             <div className="mypage__cards3">
-              {mockUserActivityStats.map((stat) => (
+              {data.stats.map((stat) => (
                 <StatCard key={stat.id} stat={stat} />
               ))}
             </div>
@@ -101,7 +131,7 @@ export default function MyPage() {
             </div>
 
             <div className="mypage__grid4">
-              {mockOwnedFonts.map((font) => (
+              {data.ownedFonts.map((font) => (
                 <FontCard key={font.id} font={font} />
               ))}
             </div>

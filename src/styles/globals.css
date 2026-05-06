@@ -1,4 +1,5 @@
 @import url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard@latest/dist/pretendard.css');
+@import url('https://fonts.googleapis.com/css2?family=Black+And+White+Picture&family=Black+Han+Sans&family=Nanum+Brush+Script&family=Nanum+Pen+Script&display=swap');
 
 /* Keep same import order as the original Next.js globals.css */
 @import './pages/home.css';

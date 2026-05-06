@@ -5,6 +5,9 @@ export type HomeFontCardData = {
   sample: string;
   fontFamily: string;
   description: string;
+  attribution?: string;
+  visualVariant?: 'paper' | 'sunrise' | 'mist' | 'gradient';
+  quoteLines?: string[];
 };
 
 export type UserFontKind = '무료' | '유료';

@@ -1,5 +1,8 @@
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { fontifyApi } from '../api/fontifyApi';
+import { mapDownloadToPendingReviewFont, mapRatingToReview } from '../api/mappers';
+import { useApiResource } from '../hooks/useApiResource';
 import {
   mockFeaturedReview,
   mockPendingReviewFonts,
@@ -81,6 +84,25 @@ function ReviewItem({ review }: { review: ReviewCard }) {
 }
 
 export default function ReviewPage() {
+  const { data } = useApiResource(
+    {
+      pendingReviewFonts: mockPendingReviewFonts,
+      reviews: mockReviews,
+    },
+    async () => {
+      const [downloads, ratings] = await Promise.all([
+        fontifyApi.getMyDownloads(),
+        fontifyApi.getMyRatings(),
+      ]);
+
+      return {
+        pendingReviewFonts: downloads.slice(0, 2).map(mapDownloadToPendingReviewFont),
+        reviews: ratings.map(mapRatingToReview),
+      };
+    },
+    [],
+  );
+
   return (
     <>
       <Header />
@@ -97,11 +119,11 @@ export default function ReviewPage() {
 
         <section className="reviewPending container" aria-label="리뷰 대기중인 서체">
           <div className="reviewPending__cards">
-            {mockPendingReviewFonts.map((font) => (
+            {data.pendingReviewFonts.map((font) => (
               <PendingFontCard key={font.id} font={font} />
             ))}
             <article className="reviewStatsCard">
-              <strong>{String(mockPendingReviewFonts.length).padStart(2, '0')}</strong>
+              <strong>{String(data.pendingReviewFonts.length).padStart(2, '0')}</strong>
               <span>피드백 대기 중인 서체</span>
               <div className="reviewStatsCard__bar" aria-hidden="true">
                 <i />
@@ -125,7 +147,7 @@ export default function ReviewPage() {
           </header>
 
           <div className="reviewMasonry">
-            <ReviewItem review={mockReviews[0]} />
+            <ReviewItem review={data.reviews[0] ?? mockReviews[0]} />
             <article className="reviewImpactCard">
               <div className="reviewImpactCard__spark" aria-hidden="true">
                 ✦
@@ -142,7 +164,7 @@ export default function ReviewPage() {
                 <strong>{mockReviewImpact.growthLabel}</strong>
               </div>
             </article>
-            {mockReviews.slice(1).map((review) => (
+            {data.reviews.slice(1).map((review) => (
               <ReviewItem key={review.id} review={review} />
             ))}
             <article className="reviewFeatureCard">

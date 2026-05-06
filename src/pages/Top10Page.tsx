@@ -1,6 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
+import { fontifyApi } from '../api/fontifyApi';
+import { mapGeneratedFontToTopFont } from '../api/mappers';
 import { mockTopFonts } from '../mocks/topFonts';
 import type { TopFont } from '../types/font';
 
@@ -77,6 +79,23 @@ export default function Top10Page() {
   const [likedIds, setLikedIds] = useState<string[]>([]);
   const visibleFonts = useMemo(() => fonts.slice(0, visibleCount), [fonts, visibleCount]);
   const hasMore = visibleCount < fonts.length;
+
+  useEffect(() => {
+    let isMounted = true;
+    fontifyApi
+      .listGeneratedFonts({ limit: 10 })
+      .then((items) => {
+        if (isMounted && items.length > 0) {
+          setFonts(items.map(mapGeneratedFontToTopFont));
+        }
+      })
+      .catch(() => {
+        if (isMounted) setFonts(mockTopFonts);
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const toggleLike = (id: string) => {
     setFonts((current) =>

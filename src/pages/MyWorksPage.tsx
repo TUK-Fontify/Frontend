@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
+import { fontifyApi } from '../api/fontifyApi';
+import { mapGenerationJobToWorkItem } from '../api/mappers';
+import { useApiResource } from '../hooks/useApiResource';
 import { mockWorkItems } from '../mocks/works';
 import type { WorkItem, WorkTimelineLog } from '../types/work';
 
@@ -303,9 +306,18 @@ function WorkListStatus({ title, body }: { title: string; body: string }) {
 
 export default function MyWorksPage() {
   const [expandedWorkIds, setExpandedWorkIds] = useState<string[]>([]);
-  const isLoading = false;
-  const loadError = '';
-  const workItems = mockWorkItems;
+  const {
+    data: workItems,
+    isLoading,
+    error: loadError,
+  } = useApiResource(
+    mockWorkItems,
+    async () => {
+      const jobs = await fontifyApi.getMyGenerations();
+      return jobs.map(mapGenerationJobToWorkItem);
+    },
+    [],
+  );
   const selectedWork = workItems.find((work) => expandedWorkIds.includes(work.id)) ?? workItems[0];
   const progressPercent = selectedWork ? clampPercent(selectedWork.progressPercent) : 0;
 

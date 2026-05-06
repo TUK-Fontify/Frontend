@@ -12,6 +12,8 @@ const bannerAvatar1 = '/images/my-page/activity-like-icon.svg';
 const bannerAvatar2 = '/images/my-page/activity-owned-font-icon.svg';
 
 function HomeFontCard({ font }: { font: HomeFontCardData }) {
+  const hasShowcase = Boolean(font.visualVariant);
+
   return (
     <a className="font-card font-card--link" href="#/selected">
       <div className="font-card__top">
@@ -21,12 +23,36 @@ function HomeFontCard({ font }: { font: HomeFontCardData }) {
       <div className="font-card__sample" style={{ fontFamily: font.fontFamily }}>
         {font.sample}
       </div>
-      <div className="font-card__popover" role="tooltip">
-        <strong>{font.name}</strong>
-        <div className="font-card__popoverSample" style={{ fontFamily: font.fontFamily }}>
-          {font.sample}
-        </div>
-        <p>{font.description}</p>
+      <div
+        className={hasShowcase ? 'font-card__popover font-card__popover--showcase' : 'font-card__popover'}
+        role="tooltip"
+      >
+        {hasShowcase ? (
+          <>
+            <div
+              className={`popularFontCard__visual popularFontCard__visual--${font.visualVariant} font-card__popoverVisual`}
+            >
+              <div className="popularFontCard__quote" style={{ fontFamily: font.fontFamily }}>
+                {(font.quoteLines ?? [font.sample]).map((line) => (
+                  <span key={line}>{line}</span>
+                ))}
+              </div>
+            </div>
+            <div className="font-card__popoverShowcaseText">
+              <strong>{font.name}</strong>
+              <p>{font.description}</p>
+              {font.attribution ? <span>{font.attribution}</span> : null}
+            </div>
+          </>
+        ) : (
+          <>
+            <strong>{font.name}</strong>
+            <div className="font-card__popoverSample" style={{ fontFamily: font.fontFamily }}>
+              {font.sample}
+            </div>
+            <p>{font.description}</p>
+          </>
+        )}
       </div>
     </a>
   );
@@ -269,7 +295,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section id="popular" className="container section">
+        <section id="popular" className="container section section--popularFonts">
           <div className="section__head">
             <div className="section__title">
               <h2>인기 폰트</h2>

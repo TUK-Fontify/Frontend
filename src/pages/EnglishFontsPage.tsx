@@ -1,6 +1,9 @@
 import { useMemo, useState } from 'react';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
+import { fontifyApi } from '../api/fontifyApi';
+import { mapFontFileToEnglishFont } from '../api/mappers';
+import { useApiResource } from '../hooks/useApiResource';
 import { fontFilters, fontKeywordOptions, mockEnglishFonts } from '../mocks/englishFonts';
 import type {
   FontFilterKey,
@@ -23,6 +26,14 @@ const tagToneMap: Record<FontKeywordKey, string> = {
 };
 
 export default function EnglishFontsPage() {
+  const { data: fonts } = useApiResource(
+    mockEnglishFonts,
+    async () => {
+      const items = await fontifyApi.listFonts({ limit: 100 });
+      return items.map(mapFontFileToEnglishFont);
+    },
+    [],
+  );
   const [selectedFilters, setSelectedFilters] = useState<FontFilterKey[]>([]);
   const [selectedKeywords, setSelectedKeywords] = useState<FontKeywordKey[]>([]);
   const [sortBy, setSortBy] = useState<FontSortKey>('popular');
@@ -33,7 +44,7 @@ export default function EnglishFontsPage() {
   const pageSize = 15;
 
   const filteredFonts = useMemo(() => {
-    let next = mockEnglishFonts.filter((font) => {
+    let next = fonts.filter((font) => {
       const filterMatch =
         selectedFilters.length === 0 || selectedFilters.includes(font.type);
       const keywordMatch =
@@ -50,7 +61,7 @@ export default function EnglishFontsPage() {
     );
 
     return next;
-  }, [selectedFilters, selectedKeywords, sortBy]);
+  }, [fonts, selectedFilters, selectedKeywords, sortBy]);
 
   const totalPages = Math.max(1, Math.ceil(filteredFonts.length / pageSize));
   const visibleFonts = filteredFonts.slice((page - 1) * pageSize, page * pageSize);
