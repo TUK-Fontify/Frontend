@@ -213,7 +213,11 @@ export default function EnglishFontsPage() {
               {viewMode === 'grid' ? (
                 <div className="englishFonts__grid">
                   {visibleFonts.map((font) => (
-                    <a key={font.id} className="englishFonts__card" href="#/english-detail">
+                    <a
+                      key={font.id}
+                      className="englishFonts__card"
+                      href={`#/english-detail?fontId=${font.id}`}
+                    >
                       <div className="englishFonts__cardTags">
                         {font.tags.map((tag) => (
                           <span
@@ -282,7 +286,10 @@ export default function EnglishFontsPage() {
                       </div>
 
                       <div className="englishFonts__listActions">
-                        <a className="englishFonts__actionBtn englishFonts__actionBtn--ghost" href="#/english-detail">
+                        <a
+                          className="englishFonts__actionBtn englishFonts__actionBtn--ghost"
+                          href={`#/english-detail?fontId=${font.id}`}
+                        >
                           상세 페이지
                         </a>
                         <button

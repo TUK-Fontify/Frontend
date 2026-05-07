@@ -30,7 +30,10 @@ function routeFromHash(hash: string): Route {
 
   // Route format: "#/english-detail" | "#/selected" | "#/my-page"
   if (normalized.startsWith('#/')) {
-    const path = normalized.slice(2).split('#')[0]; // strip "#/..." and any extra fragment
+    const path = normalized
+      .slice(2)
+      .split('#')[0]
+      .split('?')[0]; // strip "#/...", query string, and any extra fragment
     if (path === '' || path === '/') return 'home';
     if (path === 'english-detail') return 'english-detail';
     if (path === 'selected') return 'selected';

@@ -156,7 +156,7 @@ export default function HomePage() {
 
               {/* Slide 1 우측 카드: 카드 문구/샘플 폰트 수정 지점 */}
               <div className="hero__cards" aria-label="미리보기">
-                <a className="pv" href="#/english-detail">
+                <a className="pv" href="#/english-detail?fontName=Ubuntu">
                   <header className="pv__top">
                     <span className="pv__name">Ubuntu</span>
                     <span className="pv__tag">구글</span>
@@ -166,7 +166,7 @@ export default function HomePage() {
                   </div>
                 </a>
 
-                <a className="pv" href="#/english-detail">
+                <a className="pv" href="#/english-detail?fontName=Merriweather">
                   <header className="pv__top">
                     <span className="pv__name">Merryweather</span>
                     <span className="pv__tag">구글</span>
@@ -176,7 +176,7 @@ export default function HomePage() {
                   </div>
                 </a>
 
-                <a className="pv" href="#/english-detail">
+                <a className="pv" href="#/english-detail?fontName=Playfair">
                   <header className="pv__top">
                     <span className="pv__name">Playfair</span>
                     <span className="pv__tag">구글</span>
@@ -186,7 +186,7 @@ export default function HomePage() {
                   </div>
                 </a>
 
-                <a className="pv" href="#/english-detail">
+                <a className="pv" href="#/english-detail?fontName=Lato">
                   <header className="pv__top">
                     <span className="pv__name">Lato</span>
                     <span className="pv__tag">구글</span>

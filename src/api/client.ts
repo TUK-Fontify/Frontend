@@ -3,13 +3,18 @@ type RequestOptions = Omit<RequestInit, 'body'> & {
 };
 
 type ImportMetaWithEnv = ImportMeta & {
-  env?: Record<string, string | undefined>;
+  env?: Record<string, string | boolean | undefined> & {
+    DEV?: boolean;
+  };
 };
 
 const env = (import.meta as ImportMetaWithEnv).env ?? {};
+const rawApiBaseUrl =
+  typeof env.VITE_API_BASE_URL === 'string' ? env.VITE_API_BASE_URL : undefined;
+const fallbackApiBaseUrl = env.DEV ? '/api/v1' : 'http://localhost:8000/api/v1';
 
 export const API_BASE_URL =
-  env.VITE_API_BASE_URL?.replace(/\/$/, '') ?? 'http://localhost:8000/api/v1';
+  (rawApiBaseUrl ?? fallbackApiBaseUrl).replace(/\/$/, '');
 
 const DEV_USER_ID = env.VITE_DEV_USER_ID ?? 'dev-user-001';
 
