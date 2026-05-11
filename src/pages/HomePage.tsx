@@ -359,7 +359,6 @@ export default function HomePage() {
                     <div className="scanScene__glyphWrap">
                       <div className="scanScene__gridLine scanScene__gridLine--verticalLeft" />
                       <div className="scanScene__gridLine scanScene__gridLine--verticalRight" />
-                      <div className="scanScene__gridLine scanScene__gridLine--top" />
                       <div className="scanScene__gridLine scanScene__gridLine--mid" />
                       <div className="scanScene__glyph">가</div>
                       <div className="scanScene__laser" />
