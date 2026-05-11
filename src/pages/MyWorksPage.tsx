@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { fontifyApi } from '../api/fontifyApi';
-import { getStoredGenerationJobs } from '../api/generationStorage';
+import { getStoredGenerationJobs, removeStoredGenerationJob } from '../api/generationStorage';
 import { mapGenerationStatusToWorkItem } from '../api/mappers';
 import { mockWorkItems } from '../mocks/works';
 import type { WorkItem, WorkTimelineLog } from '../types/work';
@@ -250,10 +250,12 @@ function WorkCard({
   work,
   expanded,
   onToggle,
+  onDelete,
 }: {
   work: WorkItem;
   expanded: boolean;
   onToggle: () => void;
+  onDelete: () => void;
 }) {
   return (
     <article className="workActiveCard">
@@ -296,9 +298,18 @@ function WorkCard({
           <a className="workRetryButton" href="#/english-fonts">
             다시 시도
           </a>
+        ) : work.phase === 'completed' ? (
+          <button type="button" onClick={onDelete}>
+            내역 삭제
+          </button>
         ) : (
           <button type="button">{work.statusLabel === 'QUEUED' ? '작업 취소' : '학습 중단'}</button>
         )}
+        {work.phase === 'failed' ? (
+          <button type="button" onClick={onDelete}>
+            실패 내역 삭제
+          </button>
+        ) : null}
       </div>
       {expanded ? <WorkTimeline logs={work.logs} /> : null}
     </article>
@@ -414,6 +425,13 @@ export default function MyWorksPage() {
     );
   };
 
+  const handleDeleteWork = (workId: string) => {
+    const numericWorkId = Number(workId);
+    removeStoredGenerationJob(numericWorkId);
+    setWorkItems((current) => current.filter((work) => work.id !== workId));
+    setExpandedWorkIds((current) => current.filter((id) => id !== workId));
+  };
+
   return (
     <div className="myWorksPage">
       <Header variant="home" activeNav="my" />
@@ -441,6 +459,7 @@ export default function MyWorksPage() {
                   work={work}
                   expanded={expandedWorkIds.includes(work.id)}
                   onToggle={() => toggleWork(work.id)}
+                  onDelete={() => handleDeleteWork(work.id)}
                 />
               ))}
             </div>
