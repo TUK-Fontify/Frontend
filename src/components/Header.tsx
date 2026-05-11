@@ -1,13 +1,16 @@
 type HeaderProps = {
   activeNav?: 'popular' | 'english' | 'my' | 'none';
-  variant?: 'home' | 'english-detail' | 'selected' | 'top10' | 'english-fonts';
+  variant?: 'home' | 'english-detail' | 'selected' | 'top10' | 'english-fonts' | 'handwriting';
 };
 
 export default function Header({
   activeNav = 'none',
   variant = 'home',
 }: HeaderProps) {
-  void variant;
+  const logoSrc =
+    variant === 'handwriting'
+      ? '/images/brand/fontify-handwriting-logo.png'
+      : '/images/brand/fontify-logo-hd.png';
 
   const popularLinkClass =
     activeNav === 'popular' ? 'nav__link nav__link--active' : 'nav__link';
@@ -23,8 +26,8 @@ export default function Header({
       <div className="container header__top">
         <a className="brand" href="#/">
           <img
-            className="brand__logoImg"
-            src="/images/brand/fontify-logo.png"
+            className={`brand__logoImg ${variant === 'handwriting' ? 'brand__logoImg--handwriting' : ''}`}
+            src={logoSrc}
             alt="Fontify logo"
           />
         </a>

@@ -4,7 +4,7 @@ import Footer from '../components/Footer';
 export default function HandwritingPage() {
   return (
     <>
-      <Header variant="home" />
+      <Header variant="handwriting" />
 
       <main className="main">
         <section className="container section handwriting">

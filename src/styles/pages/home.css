@@ -62,22 +62,25 @@ button,input{font:inherit}
   align-items:center;
   justify-content:space-between;
   gap:24px;
-  padding-top:11px;
-  padding-bottom:10px;
-  min-height:63px;
+  padding-top:6px;
+  padding-bottom:0;
+  min-height:78px;
 }
 .brand{
   display:flex;
   align-items:center;
-  justify-content:center;
-  width:160px;
+  justify-content:flex-start;
+  flex:0 0 188px;
   text-decoration:none;
 }
 .brand__logoImg{
-  height:48px;
+  height:85px;
   display:block;
-  margin-top:8px;
+  margin-top:0;
   object-fit:contain;
+}
+.brand__logoImg--handwriting{
+  height:85px;
 }
 .brand__mark{
   width:40px;height:40px;
@@ -97,8 +100,9 @@ button,input{font:inherit}
 
 .search{
   position:relative;
-  flex:1 1 672px;
+  flex:1 1 640px;
   max-width:672px;
+  margin-inline:auto;
 }
 .search__input{
   width:100%;
@@ -1051,7 +1055,7 @@ button,input{font:inherit}
 .font-card__popover{
   position:absolute;
   left:50%;
-  top:calc(100% + 12px);
+  bottom:calc(100% + 12px);
   z-index:40;
   width:min(300px, calc(100vw - 48px));
   padding:18px;
@@ -1062,7 +1066,7 @@ button,input{font:inherit}
   color:#1e293b;
   opacity:0;
   visibility:hidden;
-  transform:translate(-50%, -4px);
+  transform:translate(-50%, 4px);
   transition:
     opacity .18s ease .6s,
     transform .18s ease .6s,
@@ -1072,11 +1076,11 @@ button,input{font:inherit}
   content:'';
   position:absolute;
   left:50%;
-  top:-7px;
+  bottom:-7px;
   width:12px;
   height:12px;
-  border-left:1px solid rgba(226,232,240,.9);
-  border-top:1px solid rgba(226,232,240,.9);
+  border-right:1px solid rgba(226,232,240,.9);
+  border-bottom:1px solid rgba(226,232,240,.9);
   background:#fff;
   transform:translateX(-50%) rotate(45deg);
 }
@@ -1809,6 +1813,13 @@ button,input{font:inherit}
 }
 @media (max-width: 640px){
   .header__top{flex-wrap:wrap; align-items:center}
+  .brand{
+    flex-basis:172px;
+  }
+  .brand__logoImg,
+  .brand__logoImg--handwriting{
+    height:68px;
+  }
   .search{order:3; flex-basis:100%; max-width:none}
   .hero{
     padding:24px 24px 20px;
