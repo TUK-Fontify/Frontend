@@ -24,6 +24,7 @@ export type WorkItem = {
   progressPercent: number;
   phase: WorkPhase;
   statusLabel: string;
+  failReason?: string | null;
   queueLabel?: string;
   sample: string;
   previewLetters?: string[];

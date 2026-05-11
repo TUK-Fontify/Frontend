@@ -3,7 +3,9 @@ import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { fontifyApi } from '../api/fontifyApi';
 import type { ApiFontFileItem } from '../api/backendTypes';
+import { saveStoredGenerationJob } from '../api/generationStorage';
 import { useApiResource } from '../hooks/useApiResource';
+import { mapFontFileToEnglishFont, mapGenerationCreateResponseToStoredJob } from '../api/mappers';
 
 const fallbackFont: ApiFontFileItem = {
   font_file_id: 0,
@@ -49,6 +51,7 @@ function buildVariantRows(font: ApiFontFileItem) {
 export default function EnglishDetailPage() {
   const [inputText, setInputText] = useState('');
   const [routeParams, setRouteParams] = useState<DetailRouteParams>(() => readDetailParamsFromHash());
+  const [creating, setCreating] = useState(false);
 
   useEffect(() => {
     const handleHashChange = () => {
@@ -64,11 +67,22 @@ export default function EnglishDetailPage() {
   const { data: font, isLoading, error } = useApiResource<ApiFontFileItem | null>(
     fontId || fontName ? fallbackFont : null,
     async () => {
-      if (fontId) return fontifyApi.getFont(fontId);
-      if (!fontName) return null;
-
       const items = await fontifyApi.listFonts({ limit: 100 });
       const normalizedTarget = fontName.trim().toLowerCase();
+
+      if (fontId) {
+        const numericFontId = Number(fontId);
+        const matchedById = items.find((item) => item.font_file_id === numericFontId);
+        if (matchedById) return matchedById;
+
+        try {
+          return await fontifyApi.getFont(fontId);
+        } catch {
+          return null;
+        }
+      }
+
+      if (!fontName) return null;
 
       return (
         items.find((item) => item.name.trim().toLowerCase() === normalizedTarget) ?? null
@@ -81,6 +95,26 @@ export default function EnglishDetailPage() {
   const fontFamily =
     font && font.name ? `${font.name}, Pretendard, sans-serif` : 'Pretendard, sans-serif';
   const variantRows = font ? buildVariantRows(font) : [];
+
+  const handleCreateGeneration = async () => {
+    if (!font || creating) return;
+
+    try {
+      setCreating(true);
+      const created = await fontifyApi.createGoogleGeneration(font.font_file_id);
+      const mappedFont = mapFontFileToEnglishFont(font);
+      saveStoredGenerationJob(mapGenerationCreateResponseToStoredJob(created, mappedFont));
+      window.location.hash = '#/my-works';
+    } catch (requestError) {
+      const message =
+        requestError instanceof Error
+          ? requestError.message
+          : '생성 요청을 시작하지 못했습니다.';
+      window.alert(message);
+    } finally {
+      setCreating(false);
+    }
+  };
 
   return (
     <>
@@ -107,8 +141,13 @@ export default function EnglishDetailPage() {
               >
                 Source file
               </a>
-              <button className="btn btn--ghost btn--sm eng-detail__primary" type="button">
-                Generate font
+              <button
+                className="btn btn--ghost btn--sm eng-detail__primary"
+                type="button"
+                onClick={handleCreateGeneration}
+                disabled={!font || creating}
+              >
+                {creating ? 'Starting...' : 'Generate font'}
               </button>
             </div>
           </header>
@@ -186,8 +225,13 @@ export default function EnglishDetailPage() {
                     <p className="eng-row__sample" style={{ fontFamily }}>
                       {sampleText}
                     </p>
-                    <button className="eng-row__action" type="button">
-                      Generate
+                    <button
+                      className="eng-row__action"
+                      type="button"
+                      onClick={handleCreateGeneration}
+                      disabled={creating}
+                    >
+                      {creating ? 'Generating...' : 'Generate'}
                     </button>
                   </article>
                 ))

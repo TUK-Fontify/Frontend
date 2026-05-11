@@ -134,7 +134,13 @@ export function mapGenerationStatusToWorkItem(
   storedJob: StoredGenerationJob,
   status: ApiGenerationStatus,
 ): WorkItem {
-  const progressPercent = clampPercent(status.progress);
+  const isFailed =
+    status.status.toUpperCase().includes('FAIL') ||
+    status.status.toUpperCase().includes('ERROR');
+  const progressPercent =
+    isFailed && status.preview_image_urls.length === 0 && !status.generated_font_url
+      ? 0
+      : clampPercent(status.progress);
   const phase = mapBackendStatusToPhase(status.status, progressPercent);
   const hasPreview = status.preview_image_urls.length > 0;
 
@@ -145,6 +151,7 @@ export function mapGenerationStatusToWorkItem(
     progressPercent,
     phase,
     statusLabel: status.status,
+    failReason: status.fail_reason,
     sample: 'Aa',
     previewLetters: hasPreview ? mapPreviewUrlsToLetters(status.preview_image_urls) : undefined,
     previewImageUrls: hasPreview ? status.preview_image_urls.map((url) => absolutizeAssetUrl(url) ?? url) : undefined,

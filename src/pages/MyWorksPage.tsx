@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { fontifyApi } from '../api/fontifyApi';
-import { getStoredGenerationJobs, removeStoredGenerationJob } from '../api/generationStorage';
+import { getStoredGenerationJobs } from '../api/generationStorage';
 import { mapGenerationStatusToWorkItem } from '../api/mappers';
 import { mockWorkItems } from '../mocks/works';
 import type { WorkItem, WorkTimelineLog } from '../types/work';
@@ -45,6 +45,9 @@ function getStepState(totalProgress: number, index: number) {
 }
 
 function getProcessStageState(work: WorkItem, index: number) {
+  if (work.phase === 'failed') {
+    return index === 0 ? 'failed' : 'waiting';
+  }
   if (work.phase === 'queued') return 'waiting';
   if (work.phase === 'analyzing') return index === 0 ? 'active' : 'waiting';
   if (work.phase === 'preview_ready') {
@@ -63,6 +66,9 @@ function getProcessStageState(work: WorkItem, index: number) {
 }
 
 function getProcessStageStatus(work: WorkItem, index: number) {
+  if (work.phase === 'failed') {
+    return index === 0 ? '실패' : '미진행';
+  }
   const stepProgress = getStepProgress(work.progressPercent, index);
   const state = getProcessStageState(work, index);
   if (state === 'done') return '완료';
@@ -71,6 +77,15 @@ function getProcessStageStatus(work: WorkItem, index: number) {
 }
 
 function getPhaseMessage(work: WorkItem) {
+  if (work.phase === 'failed') {
+    return {
+      title: '생성 요청 실패',
+      body:
+        work.failReason ??
+        '작업이 시작되기 전에 요청이 중단되었습니다. 백엔드 응답과 요청 로그를 확인해주세요.',
+    };
+  }
+
   if (work.phase === 'queued') {
     return {
       title: '영문 분석 준비 중',
@@ -130,7 +145,9 @@ function ProgressStepper({ work }: { work: WorkItem }) {
 
           return (
           <div className={`workStepper__item is-${state}`} key={step}>
-            <div className="workStepper__dot">{state === 'done' ? '✓' : `0${index + 1}`}</div>
+            <div className="workStepper__dot">
+              {state === 'done' ? '✓' : state === 'failed' ? '!' : `0${index + 1}`}
+            </div>
             <p>
               <strong>{step}</strong>
               <span>{getProcessStageStatus(work, index)}</span>
@@ -162,8 +179,12 @@ function PreviewGrid({ work }: { work: WorkItem }) {
 
       {!isPreviewAvailable(work) ? (
         <div className="workPreview__empty">
-          <strong>미리보기 생성 전</strong>
-          <p>영문 분석이 완료되면 이 영역에 14자 한글 미리보기가 표시됩니다.</p>
+          <strong>{work.phase === 'failed' ? '작업이 시작되지 않았습니다' : '미리보기 생성 전'}</strong>
+          <p>
+            {work.phase === 'failed'
+              ? work.failReason ?? '생성 요청이 실패하여 미리보기를 만들지 못했습니다.'
+              : '영문 분석이 완료되면 이 영역에 14자 한글 미리보기가 표시됩니다.'}
+          </p>
         </div>
       ) : work.previewImageUrls?.length ? (
         <div className="workPreview__grid workPreview__grid--images">
@@ -241,7 +262,7 @@ function WorkCard({
           <h2>{work.title}</h2>
           <p>{work.updatedAt}</p>
         </div>
-        <span>{work.statusLabel}</span>
+        <span className={work.phase === 'failed' ? 'is-failed' : ''}>{work.statusLabel}</span>
       </header>
 
       <ProgressStepper work={work} />
@@ -252,6 +273,15 @@ function WorkCard({
           <a className="workDownloadButton" href={work.downloadUrl ?? '#'} download>
             TTF 다운로드
           </a>
+        ) : work.phase === 'failed' ? (
+          <button
+            className="is-primary"
+            type="button"
+            onClick={onToggle}
+            aria-expanded={expanded}
+          >
+            {expanded ? '실패 내역 닫기' : '실패 내역 보기'}
+          </button>
         ) : (
           <button
             className="is-primary"
@@ -262,7 +292,13 @@ function WorkCard({
             {expanded ? '상세 타임라인 닫기' : '진행 상황 상세 보기'}
           </button>
         )}
-        <button type="button">{work.statusLabel === 'QUEUED' ? '작업 취소' : '학습 중단'}</button>
+        {work.phase === 'failed' ? (
+          <a className="workRetryButton" href="#/english-fonts">
+            다시 시도
+          </a>
+        ) : (
+          <button type="button">{work.statusLabel === 'QUEUED' ? '작업 취소' : '학습 중단'}</button>
+        )}
       </div>
       {expanded ? <WorkTimeline logs={work.logs} /> : null}
     </article>
@@ -349,10 +385,6 @@ export default function MyWorksPage() {
         if (!isMounted) return;
         setWorkItems(results);
         setLoadError('');
-
-        results
-          .filter((item) => item.phase === 'completed' || item.phase === 'failed')
-          .forEach((item) => removeStoredGenerationJob(Number(item.id)));
       } catch (error) {
         if (!isMounted) return;
         setLoadError(error instanceof Error ? error.message : '작업 상태를 불러오지 못했습니다.');

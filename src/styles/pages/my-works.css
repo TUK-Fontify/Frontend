@@ -299,6 +299,10 @@
   letter-spacing:1.2px;
 }
 
+.workActiveCard__header > span.is-failed{
+  background:#dc2626;
+}
+
 .workStepper{
   position:relative;
   padding:40px 16px 0;
@@ -355,6 +359,11 @@
   color:#fff;
 }
 
+.workStepper__item.is-failed .workStepper__dot{
+  background:#dc2626;
+  color:#fff;
+}
+
 .workStepper__item.is-active .workStepper__dot{
   box-shadow:0 0 0 8px rgba(0,91,191,.1);
 }
@@ -378,6 +387,10 @@
 
 .workStepper__item.is-active p{
   color:#005bbf;
+}
+
+.workStepper__item.is-failed p{
+  color:#dc2626;
 }
 
 .workPreview{
@@ -550,6 +563,11 @@
   word-break:keep-all;
 }
 
+.workPreview__empty strong,
+.workPreview__notice strong{
+  word-break:keep-all;
+}
+
 .workActiveCard__actions{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -565,6 +583,19 @@
   font-size:14px;
   font-weight:800;
   cursor:pointer;
+}
+
+.workRetryButton{
+  height:48px;
+  border-radius:8px;
+  background:#dfe8ff;
+  color:#005bbf;
+  font-size:14px;
+  font-weight:800;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
 }
 
 .workActiveCard__actions .is-primary{
@@ -741,6 +772,11 @@
 .workTimeline li.is-active::before{
   background:#1a73e8;
   box-shadow:0 0 0 5px rgba(0,91,191,.12);
+}
+
+.workTimeline li.is-failed::before{
+  background:#dc2626;
+  box-shadow:0 0 0 5px rgba(220,38,38,.12);
 }
 
 .workTimeline li > span{
