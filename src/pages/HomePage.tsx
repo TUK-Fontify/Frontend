@@ -109,7 +109,7 @@ export default function HomePage() {
       <Header variant="home" />
 
       <main className="main">
-        <section className="hero hero--banner container">
+        <section className={`hero hero--banner container ${currentSlide === 'figma' ? 'hero--bannerAlt' : ''}`}>
           <div className="hero__bg" aria-hidden="true">
             <span className="hero__blob hero__blob--a" />
             <span className="hero__blob hero__blob--b" />

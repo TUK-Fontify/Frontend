@@ -53,7 +53,7 @@ button,input{font:inherit}
 .header{
   position:sticky;
   top:0;
-  z-index:10;
+  z-index:120;
   background:#fff;
   border-bottom:1px solid var(--border);
 }
@@ -230,7 +230,7 @@ button,input{font:inherit}
 .section--popularFonts,
 .section:has(.popularFontCard__visual){
   position:relative;
-  z-index:30;
+  z-index:1;
 }
 .section__head{
   display:flex;
@@ -259,6 +259,27 @@ button,input{font:inherit}
   border-radius:var(--r-16);
   padding:48px;
   overflow:hidden;
+}
+.hero--bannerAlt{
+  background:var(--bg-soft);
+}
+.hero--bannerAlt .hero__blob--a{
+  background:#f472b6;
+  opacity:.16;
+}
+.hero--bannerAlt .hero__blob--b{
+  background:#f472b6;
+  opacity:0;
+}
+.hero--bannerAlt .hero__blob--c{
+  background:#f9a8d4;
+  opacity:.14;
+}
+.hero--bannerAlt .heroPromo__card{
+  background:linear-gradient(145deg, rgba(255,255,255,.96), rgba(255,245,252,.9));
+}
+.hero--bannerAlt .heroPromo__floating{
+  background:rgba(255,255,255,.88);
 }
 .hero__bg{position:absolute; inset:0; pointer-events:none}
 .hero__blob{
