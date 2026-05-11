@@ -27,6 +27,7 @@ export type WorkItem = {
   queueLabel?: string;
   sample: string;
   previewLetters?: string[];
+  previewImageUrls?: string[];
   downloadUrl?: string;
   logs: WorkTimelineLog[];
 };

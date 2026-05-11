@@ -4,7 +4,8 @@ import Footer from '../components/Footer';
 import { popularFonts, recommendedFonts } from '../mocks/home';
 import type { HomeFontCardData } from '../types/font';
 
-const heroSlides = ['existing', 'figma'] as const;
+const heroSlides = ['existing', 'figma', 'scan'] as const;
+const heroSlideCount = heroSlides.length;
 const COMMUNITY_BATCH_SIZE = 3;
 const COMMUNITY_TILE_COUNT = 10;
 
@@ -63,9 +64,21 @@ export default function HomePage() {
   const [visibleCommunityCount, setVisibleCommunityCount] = useState(0);
   const communityRef = useRef<HTMLElement | null>(null);
 
+  const goToPrevSlide = () => {
+    setSlideIndex((prev) => (prev - 1 + heroSlideCount) % heroSlideCount);
+  };
+
+  const goToNextSlide = () => {
+    setSlideIndex((prev) => (prev + 1) % heroSlideCount);
+  };
+
+  const goToImageFontSearch = () => {
+    window.location.hash = '#/image-font-search';
+  };
+
   useEffect(() => {
     const timer = window.setInterval(() => {
-      setSlideIndex((prev) => (prev + 1) % heroSlides.length);
+      setSlideIndex((prev) => (prev + 1) % heroSlideCount);
     }, 8000);
     return () => window.clearInterval(timer);
   }, []);
@@ -109,7 +122,15 @@ export default function HomePage() {
       <Header variant="home" />
 
       <main className="main">
-        <section className={`hero hero--banner container ${currentSlide === 'figma' ? 'hero--bannerAlt' : ''}`}>
+        <section
+          className={`hero hero--banner container ${
+            currentSlide === 'figma'
+              ? 'hero--bannerAlt'
+              : currentSlide === 'scan'
+                ? 'hero--bannerScan'
+                : ''
+          }`}
+        >
           <div className="hero__bg" aria-hidden="true">
             <span className="hero__blob hero__blob--a" />
             <span className="hero__blob hero__blob--b" />
@@ -213,7 +234,7 @@ export default function HomePage() {
                 </article>
               </div>
               </div>
-            ) : (
+            ) : currentSlide === 'figma' ? (
               <div className="heroPromo">
               <div className="heroPromo__left">
                 <span className="heroPromo__tag">INK &amp; PIXEL EDITORIAL</span>
@@ -279,10 +300,101 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
+            ) : (
+              <div className="heroPromo heroPromo--scan">
+                <div className="heroPromo__left heroPromo__left--scan">
+                  <span className="heroPromo__tag heroPromo__tag--scan">FONT SEARCH EDITORIAL</span>
+
+                  <h1 className="heroPromo__title heroPromo__title--scan">
+                    당신이 마주친
+                    <br />
+                    <span className="heroPromo__accent heroPromo__accent--blue">모든 폰트</span>
+                  </h1>
+
+                  <p className="heroPromo__desc heroPromo__desc--scan">
+                    마음에 들던 그 폰트, 캡처한 이미지 한장으로
+                    <br />
+                    비슷한 폰트나 해당 폰트를 찾아드려요.
+                  </p>
+
+                  <div className="heroPromo__actions heroPromo__actions--scan">
+                    <button
+                      className="heroPromo__btn heroPromo__btn--primary heroPromo__btn--primaryBlue"
+                      type="button"
+                      onClick={goToImageFontSearch}
+                    >
+                      이미지 업로드하기
+                    </button>
+                    <button
+                      className="heroPromo__btn heroPromo__btn--ghost"
+                      type="button"
+                      onClick={goToImageFontSearch}
+                    >
+                      사용 방법 보기
+                    </button>
+                  </div>
+
+                  <div className="heroPromo__social heroPromo__social--scan">
+                    <div className="heroPromo__avatars">
+                      <img src={bannerAvatar1} alt="" />
+                      <img src={bannerAvatar2} alt="" />
+                      <div className="heroPromo__avatarsMore">+12k</div>
+                    </div>
+                    <p>12,400+ 명의 사용자가 이미 폰트를 찾았습니다.</p>
+                  </div>
+                </div>
+
+                <div className="heroPromo__right heroPromo__right--scan">
+                  <div className="scanScene" aria-hidden="true">
+                    <div className="scanScene__card scanScene__card--engine">
+                      <span>ANALYSIS ENGINE</span>
+                      <strong>OCR_SCAN_085</strong>
+                    </div>
+
+                    <div className="scanScene__card scanScene__card--processing">
+                      <span>• PROCESSING</span>
+                      <strong>Vectorizing glyphs...</strong>
+                    </div>
+
+                    <div className="scanScene__glyphWrap">
+                      <div className="scanScene__gridLine scanScene__gridLine--verticalLeft" />
+                      <div className="scanScene__gridLine scanScene__gridLine--verticalRight" />
+                      <div className="scanScene__gridLine scanScene__gridLine--top" />
+                      <div className="scanScene__gridLine scanScene__gridLine--mid" />
+                      <div className="scanScene__glyph">가</div>
+                      <div className="scanScene__laser" />
+                    </div>
+
+                    <div className="scanScene__card scanScene__card--match">
+                      <span>MATCH FOUND</span>
+                      <strong>High Confidence</strong>
+                    </div>
+
+                    <div className="scanScene__card scanScene__card--probability">
+                      <div className="scanScene__metricRow">
+                        <span>PROBABILITY</span>
+                        <strong>99.82%</strong>
+                      </div>
+                      <div className="scanScene__metricRow scanScene__metricRow--family">
+                        <span>FONT FAMILY</span>
+                        <strong>Pretendard Bold</strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             )}
           </div>
 
           <div className="heroBanner__dots" aria-label="메인 광고 슬라이드 인디케이터">
+            <button
+              type="button"
+              className="heroBanner__arrow heroBanner__arrow--left"
+              onClick={goToPrevSlide}
+              aria-label="이전 배너"
+            >
+              ‹
+            </button>
             {heroSlides.map((slide, idx) => (
               <button
                 key={slide}
@@ -292,6 +404,14 @@ export default function HomePage() {
                 aria-label={`${idx + 1}번 슬라이드`}
               />
             ))}
+            <button
+              type="button"
+              className="heroBanner__arrow heroBanner__arrow--right"
+              onClick={goToNextSlide}
+              aria-label="다음 배너"
+            >
+              ›
+            </button>
           </div>
         </section>
 

@@ -2,7 +2,8 @@ import { useMemo, useState } from 'react';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { fontifyApi } from '../api/fontifyApi';
-import { mapFontFileToEnglishFont } from '../api/mappers';
+import { saveStoredGenerationJob } from '../api/generationStorage';
+import { mapFontFileToEnglishFont, mapGenerationCreateResponseToStoredJob } from '../api/mappers';
 import { useApiResource } from '../hooks/useApiResource';
 import { fontFilters, fontKeywordOptions, mockEnglishFonts } from '../mocks/englishFonts';
 import type {
@@ -41,6 +42,7 @@ export default function EnglishFontsPage() {
   const [previewInput, setPreviewInput] = useState('');
   const [previewScale, setPreviewScale] = useState(43);
   const [viewMode, setViewMode] = useState<FontViewMode>('grid');
+  const [creatingFontId, setCreatingFontId] = useState<string>('');
   const pageSize = 15;
 
   const filteredFonts = useMemo(() => {
@@ -93,6 +95,23 @@ export default function EnglishFontsPage() {
     setViewMode(nextMode);
     setSortBy(nextMode === 'grid' ? 'popular' : 'latest');
     setPage(1);
+  };
+
+  const handleCreateGeneration = async (fontId: string) => {
+    const selectedFont = fonts.find((font) => font.id === fontId);
+    if (!selectedFont) return;
+
+    try {
+      setCreatingFontId(fontId);
+      const created = await fontifyApi.createGoogleGeneration(Number(fontId));
+      saveStoredGenerationJob(mapGenerationCreateResponseToStoredJob(created, selectedFont));
+      window.location.hash = '#/my-works';
+    } catch (error) {
+      const message = error instanceof Error ? error.message : '생성 요청을 시작하지 못했습니다.';
+      window.alert(message);
+    } finally {
+      setCreatingFontId('');
+    }
   };
 
   return (
@@ -295,8 +314,10 @@ export default function EnglishFontsPage() {
                         <button
                           type="button"
                           className="englishFonts__actionBtn englishFonts__actionBtn--primary"
+                          onClick={() => handleCreateGeneration(font.id)}
+                          disabled={creatingFontId === font.id}
                         >
-                          변환하기
+                          {creatingFontId === font.id ? '요청 중...' : '변환하기'}
                         </button>
                       </div>
                     </div>

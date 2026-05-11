@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { fontifyApi } from '../api/fontifyApi';
-import { mapGenerationJobToWorkItem } from '../api/mappers';
-import { useApiResource } from '../hooks/useApiResource';
+import { getStoredGenerationJobs, removeStoredGenerationJob } from '../api/generationStorage';
+import { mapGenerationStatusToWorkItem } from '../api/mappers';
 import { mockWorkItems } from '../mocks/works';
 import type { WorkItem, WorkTimelineLog } from '../types/work';
 
@@ -113,7 +113,7 @@ function getPhaseMessage(work: WorkItem) {
 }
 
 function isPreviewAvailable(work: WorkItem) {
-  return work.phase !== 'queued' && work.phase !== 'analyzing' && Boolean(work.previewLetters?.length);
+  return work.phase !== 'queued' && work.phase !== 'analyzing' && Boolean(work.previewImageUrls?.length || work.previewLetters?.length);
 }
 
 function ProgressStepper({ work }: { work: WorkItem }) {
@@ -164,6 +164,20 @@ function PreviewGrid({ work }: { work: WorkItem }) {
         <div className="workPreview__empty">
           <strong>미리보기 생성 전</strong>
           <p>영문 분석이 완료되면 이 영역에 14자 한글 미리보기가 표시됩니다.</p>
+        </div>
+      ) : work.previewImageUrls?.length ? (
+        <div className="workPreview__grid workPreview__grid--images">
+          {work.previewImageUrls.map((imageUrl, index) => (
+            <div
+              className={`workPreview__imageCard ${index > 10 ? 'is-muted' : ''} ${
+                index === 2 ? 'is-selected' : ''
+              }`}
+              key={imageUrl}
+            >
+              <img src={imageUrl} alt={work.previewLetters?.[index] ?? `미리보기 ${index + 1}`} />
+              <span>{work.previewLetters?.[index] ?? `미리보기 ${index + 1}`}</span>
+            </div>
+          ))}
         </div>
       ) : (
         <div className="workPreview__grid">
@@ -306,18 +320,59 @@ function WorkListStatus({ title, body }: { title: string; body: string }) {
 
 export default function MyWorksPage() {
   const [expandedWorkIds, setExpandedWorkIds] = useState<string[]>([]);
-  const {
-    data: workItems,
-    isLoading,
-    error: loadError,
-  } = useApiResource(
-    mockWorkItems,
-    async () => {
-      const jobs = await fontifyApi.getMyGenerations();
-      return jobs.map(mapGenerationJobToWorkItem);
-    },
-    [],
-  );
+  const [workItems, setWorkItems] = useState<WorkItem[]>(mockWorkItems);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadJobs = async () => {
+      const storedJobs = getStoredGenerationJobs();
+
+      if (storedJobs.length === 0) {
+        if (!isMounted) return;
+        setWorkItems([]);
+        setIsLoading(false);
+        setLoadError('');
+        return;
+      }
+
+      try {
+        const results = await Promise.all(
+          storedJobs.map(async (storedJob) => {
+            const status = await fontifyApi.getGenerationStatus(storedJob.jobId);
+            return mapGenerationStatusToWorkItem(storedJob, status);
+          }),
+        );
+
+        if (!isMounted) return;
+        setWorkItems(results);
+        setLoadError('');
+
+        results
+          .filter((item) => item.phase === 'completed' || item.phase === 'failed')
+          .forEach((item) => removeStoredGenerationJob(Number(item.id)));
+      } catch (error) {
+        if (!isMounted) return;
+        setLoadError(error instanceof Error ? error.message : '작업 상태를 불러오지 못했습니다.');
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    void loadJobs();
+    const polling = window.setInterval(() => {
+      void loadJobs();
+    }, 5000);
+
+    return () => {
+      isMounted = false;
+      window.clearInterval(polling);
+    };
+  }, []);
   const selectedWork = workItems.find((work) => expandedWorkIds.includes(work.id)) ?? workItems[0];
   const progressPercent = selectedWork ? clampPercent(selectedWork.progressPercent) : 0;
 

@@ -40,6 +40,9 @@ export type ApiGenerationStatus = {
   progress: number;
   similarity_percent: number | null;
   fail_reason: string | null;
+  preview_image_urls: string[];
+  generated_font_id: number | null;
+  generated_font_url: string | null;
 };
 
 export type ApiGenerationCreateResponse = {

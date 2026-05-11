@@ -2,10 +2,12 @@ import type {
   ApiDownloadItem,
   ApiFontFileItem,
   ApiGeneratedFontItem,
-  ApiGenerationJobItem,
+  ApiGenerationCreateResponse,
   ApiMeResponse,
   ApiRatingItem,
+  ApiGenerationStatus,
 } from './backendTypes';
+import type { StoredGenerationJob } from './generationStorage';
 import type {
   EnglishFontCard,
   FontFilterKey,
@@ -21,8 +23,6 @@ const fallbackAvatarSrc = '/images/my-page/profile-avatar.png';
 const statLikeIconSrc = '/images/my-page/activity-like-icon.svg';
 const statReviewIconSrc = '/images/my-page/activity-review-icon.png';
 const statOwnedIconSrc = '/images/my-page/activity-owned-font-icon.svg';
-
-const previewLetters = ['가', '나', '다', '라', '마', '바', '사', '아', '자', '차', '카', '타', '파', '하'];
 
 function clampPercent(value: number) {
   return Math.min(100, Math.max(0, Math.round(value)));
@@ -49,11 +49,11 @@ function formatDateTime(dateValue: string | null) {
 function mapBackendStatusToPhase(status: string, progress: number): WorkPhase {
   const normalized = status.toUpperCase();
   if (normalized.includes('FAIL') || normalized.includes('ERROR')) return 'failed';
+  if (normalized.includes('PREVIEW_READY')) return 'preview_ready';
   if (normalized.includes('COMPLETE') || normalized.includes('DONE') || progress >= 100) return 'completed';
   if (normalized.includes('PENDING') || normalized.includes('QUEUE')) return 'queued';
-  if (progress < 15) return 'analyzing';
-  if (progress < 35) return 'preview_ready';
-  if (progress < 85) return 'retraining';
+  if (progress < 25) return 'analyzing';
+  if (progress < 75) return 'retraining';
   return 'finalizing';
 }
 
@@ -74,9 +74,13 @@ function timelineStateForPhase(phase: WorkPhase, index: number): WorkTimelineSta
   return 'waiting';
 }
 
-function buildWorkLogs(job: ApiGenerationJobItem, phase: WorkPhase): WorkTimelineLog[] {
-  const requestedAt = formatDateTime(job.requested_at);
-  const finishedAt = formatDateTime(job.finished_at);
+function buildWorkLogs(
+  jobId: number,
+  requestedAtValue: string,
+  phase: WorkPhase,
+  failReason?: string | null,
+): WorkTimelineLog[] {
+  const requestedAt = formatDateTime(requestedAtValue);
   const steps = [
     {
       title: '작업 요청 접수',
@@ -84,42 +88,80 @@ function buildWorkLogs(job: ApiGenerationJobItem, phase: WorkPhase): WorkTimelin
     },
     {
       title: '영문 스타일 분석',
-      detail: '백엔드에서 분석 로그 API가 추가되면 실제 분석 내역으로 교체됩니다.',
+      detail: '선택한 영문 폰트 스타일을 분석하고 한글 구조로 변환하고 있습니다.',
     },
     {
       title: 'AI 재학습',
-      detail: '14자 미리보기 이후 전체 글자셋 생성을 위한 학습 단계입니다.',
+      detail: '1차 결과를 바탕으로 14자 미리보기와 전체 스타일 일관성을 맞추고 있습니다.',
     },
     {
       title: '2,350자 완성',
-      detail: phase === 'completed' ? `${finishedAt}에 작업이 완료되었습니다.` : '완료 후 TTF 다운로드 URL이 연결됩니다.',
+      detail:
+        phase === 'failed'
+          ? failReason ?? '생성 작업이 실패했습니다.'
+          : phase === 'completed'
+            ? '최종 폰트 파일이 생성되어 다운로드할 수 있습니다.'
+            : '완료 후 TTF 다운로드 URL이 연결됩니다.',
     },
   ];
 
   return steps.map((step, index) => ({
-    id: `${job.job_id}-log-${index + 1}`,
-    time: index === 0 ? requestedAt : index === 3 && phase === 'completed' ? finishedAt : '대기',
-    title: step.title,
+    id: `${jobId}-log-${index + 1}`,
+    time: index === 0 ? requestedAt : '대기',
+    title: phase === 'failed' && index === 3 ? '생성 실패' : step.title,
     detail: step.detail,
     state: timelineStateForPhase(phase, index),
   }));
 }
 
-export function mapGenerationJobToWorkItem(job: ApiGenerationJobItem): WorkItem {
-  const progressPercent = clampPercent(job.progress);
-  const phase = mapBackendStatusToPhase(job.status, progressPercent);
-  const hasPreview = !['queued', 'analyzing', 'failed'].includes(phase);
+function mapPreviewUrlsToLetters(urls: string[]) {
+  if (urls.length === 0) return undefined;
+  const fallback = ['가', '나', '다', '라', '마', '바', '사', '아', '자', '차', '카', '타', '파', '하'];
+  return urls.map((url, index) => {
+    const filename = url.split('/').pop() ?? '';
+    const letter = decodeURIComponent(filename).replace('.png', '');
+    return letter || fallback[index] || `미리보기 ${index + 1}`;
+  });
+}
+
+function absolutizeAssetUrl(url: string | null) {
+  if (!url) return undefined;
+  if (/^https?:\/\//.test(url)) return url;
+  return url;
+}
+
+export function mapGenerationStatusToWorkItem(
+  storedJob: StoredGenerationJob,
+  status: ApiGenerationStatus,
+): WorkItem {
+  const progressPercent = clampPercent(status.progress);
+  const phase = mapBackendStatusToPhase(status.status, progressPercent);
+  const hasPreview = status.preview_image_urls.length > 0;
 
   return {
-    id: String(job.job_id),
-    title: job.font_name || `Fontify 작업 #${job.job_id}`,
-    updatedAt: `요청일: ${formatDateTime(job.requested_at)}`,
+    id: String(status.job_id),
+    title: storedJob.fontName || `Fontify 작업 #${status.job_id}`,
+    updatedAt: `요청일: ${formatDateTime(storedJob.requestedAt)}`,
     progressPercent,
     phase,
-    statusLabel: job.status,
+    statusLabel: status.status,
     sample: 'Aa',
-    previewLetters: hasPreview ? previewLetters : undefined,
-    logs: buildWorkLogs(job, phase),
+    previewLetters: hasPreview ? mapPreviewUrlsToLetters(status.preview_image_urls) : undefined,
+    previewImageUrls: hasPreview ? status.preview_image_urls.map((url) => absolutizeAssetUrl(url) ?? url) : undefined,
+    downloadUrl: absolutizeAssetUrl(status.generated_font_url),
+    logs: buildWorkLogs(status.job_id, storedJob.requestedAt, phase, status.fail_reason),
+  };
+}
+
+export function mapGenerationCreateResponseToStoredJob(
+  created: ApiGenerationCreateResponse,
+  font: Pick<EnglishFontCard, 'id' | 'name'>,
+): StoredGenerationJob {
+  return {
+    jobId: created.job_id,
+    fontFileId: Number(font.id),
+    fontName: font.name,
+    requestedAt: created.requested_at,
   };
 }
 
