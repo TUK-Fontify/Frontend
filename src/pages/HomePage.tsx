@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { popularFonts, recommendedFonts } from '../mocks/home';
+import { featuredFonts } from '../mocks/home';
 import type { HomeFontCardData } from '../types/font';
 
 const heroSlides = ['existing', 'figma', 'scan'] as const;
@@ -13,56 +13,82 @@ const bannerAvatar1 = '/images/my-page/activity-like-icon.svg';
 const bannerAvatar2 = '/images/my-page/activity-owned-font-icon.svg';
 
 function HomeFontCard({ font }: { font: HomeFontCardData }) {
-  const hasShowcase = Boolean(font.visualVariant);
-
   return (
-    <a className="font-card font-card--link" href="#/selected">
-      <div className="font-card__top">
-        <span className="font-card__name">{font.name}</span>
-        <span className="pill">{font.source}</span>
-      </div>
-      <div className="font-card__sample" style={{ fontFamily: font.fontFamily }}>
-        {font.sample}
-      </div>
+    <article className="featureFontCard">
+      <button className="featureFontCard__favorite" type="button" aria-label={`${font.name} 좋아요`}>
+        <span aria-hidden="true">♡</span>
+      </button>
+
       <div
-        className={hasShowcase ? 'font-card__popover font-card__popover--showcase' : 'font-card__popover'}
-        role="tooltip"
+        className={`featureFontCard__preview ${
+          font.description.includes('\n') ? 'featureFontCard__preview--multiline' : ''
+        }`}
       >
-        {hasShowcase ? (
-          <>
-            <div
-              className={`popularFontCard__visual popularFontCard__visual--${font.visualVariant} font-card__popoverVisual`}
-            >
-              <div className="popularFontCard__quote" style={{ fontFamily: font.fontFamily }}>
-                {(font.quoteLines ?? [font.sample]).map((line) => (
-                  <span key={line}>{line}</span>
-                ))}
-              </div>
-            </div>
-            <div className="font-card__popoverShowcaseText">
-              <strong>{font.name}</strong>
-              <p>{font.description}</p>
-              {font.attribution ? <span>{font.attribution}</span> : null}
-            </div>
-          </>
-        ) : (
-          <>
-            <strong>{font.name}</strong>
-            <div className="font-card__popoverSample" style={{ fontFamily: font.fontFamily }}>
-              {font.sample}
-            </div>
-            <p>{font.description}</p>
-          </>
-        )}
+        <div className="featureFontCard__previewInner">
+          <div
+            className={`featureFontCard__glyph ${
+              font.previewDisplay ? 'featureFontCard__glyph--wordmark' : ''
+            }`}
+            style={{ fontFamily: font.fontFamily }}
+          >
+            {font.previewDisplay ? (
+              <span>{font.previewDisplay}</span>
+            ) : (
+              <>
+                <span>{font.previewGlyph ?? 'R'}</span>
+                <span>{font.previewGlyphSecondary ?? '가'}</span>
+              </>
+            )}
+          </div>
+          <p
+            className={`featureFontCard__headline ${
+              font.sampleScale === 'large' ? 'featureFontCard__headline--large' : ''
+            }`}
+            style={{ fontFamily: font.fontFamily }}
+          >
+            {font.sample}
+          </p>
+          <p className="featureFontCard__copy" style={{ fontFamily: font.fontFamily }}>
+            {font.description}
+          </p>
+        </div>
       </div>
-    </a>
+
+      <div className="featureFontCard__body">
+        <div className="featureFontCard__meta">
+          <div>
+            <strong>{font.name}</strong>
+            <p>{font.attribution ?? 'Fontify Mock'}</p>
+          </div>
+          <span>{font.source}</span>
+        </div>
+
+        <div className="featureFontCard__actions">
+          <a
+            className="featureFontCard__download featureFontCard__download--icon"
+            href={`#/english-detail?fontName=${encodeURIComponent(font.name)}`}
+            aria-label={`${font.name} 다운로드`}
+          >
+            <span aria-hidden="true">↓</span>
+          </a>
+        </div>
+      </div>
+    </article>
   );
 }
 
 export default function HomePage() {
   const [slideIndex, setSlideIndex] = useState(0);
+  const [featuredPage, setFeaturedPage] = useState(0);
+  const [featuredDirection, setFeaturedDirection] = useState<'next' | 'prev'>('next');
   const [visibleCommunityCount, setVisibleCommunityCount] = useState(0);
   const communityRef = useRef<HTMLElement | null>(null);
+  const featuredPageSize = 3;
+  const featuredPages = Array.from(
+    { length: Math.ceil(featuredFonts.length / featuredPageSize) },
+    (_, pageIndex) =>
+      featuredFonts.slice(pageIndex * featuredPageSize, pageIndex * featuredPageSize + featuredPageSize),
+  );
 
   const goToPrevSlide = () => {
     setSlideIndex((prev) => (prev - 1 + heroSlideCount) % heroSlideCount);
@@ -74,6 +100,16 @@ export default function HomePage() {
 
   const goToImageFontSearch = () => {
     window.location.hash = '#/image-font-search';
+  };
+
+  const goToPrevFeaturedPage = () => {
+    setFeaturedDirection('prev');
+    setFeaturedPage((prev) => (prev - 1 + featuredPages.length) % featuredPages.length);
+  };
+
+  const goToNextFeaturedPage = () => {
+    setFeaturedDirection('next');
+    setFeaturedPage((prev) => (prev + 1) % featuredPages.length);
   };
 
   useEffect(() => {
@@ -98,7 +134,6 @@ export default function HomePage() {
       }
 
       const progress = Math.max(0, triggerLine - rect.top);
-      // Increase step distance so each batch reveal is more noticeable.
       const stepSize = Math.max(320, viewportHeight * 0.6);
       const totalBatches = Math.ceil(COMMUNITY_TILE_COUNT / COMMUNITY_BATCH_SIZE);
       const revealedBatches = Math.min(totalBatches, 1 + Math.floor(progress / stepSize));
@@ -137,169 +172,160 @@ export default function HomePage() {
             <span className="hero__blob hero__blob--c" />
           </div>
 
-          {/* 메인 상단 슬라이더 컨테이너 */}
           <div className="heroSlideFrame">
             {currentSlide === 'existing' ? (
-              // Slide 1: 메인 배너(텍스트/우측 카드)
               <div className="hero__grid hero__grid--existing">
-              <div className="hero__copy">
-                <span className="hero__tag">GOOGLE FONTS CONVERT</span>
-                <h1 className="hero__titleTwoLine">
-                  <span>A에서 ㅎ까지,</span>
-                  <span className="hero__accentLine">디자인은 끊기지 않아야 하니까.</span>
-                </h1>
+                <div className="hero__copy">
+                  <span className="hero__tag">GOOGLE FONTS CONVERT</span>
+                  <h1 className="hero__titleTwoLine">
+                    <span>A에서 ㅎ까지,</span>
+                    <span className="hero__accentLine">디자인은 끊기지 않아야 하니까.</span>
+                  </h1>
 
-                <p className="hero__desc">
-                  한글 생성 가능한 영어 폰트를 탐색하고,
-                  <br />
-                  <span className="nowrap">당신의 프로젝트에 딱 맞는 스타일을 찾아보세요.</span>
-                  <br />
-                </p>
+                  <p className="hero__desc">
+                    한글 생성 가능한 영어 폰트를 탐색하고,
+                    <br />
+                    <span className="nowrap">당신의 프로젝트에 딱 맞는 스타일을 찾아보세요.</span>
+                    <br />
+                  </p>
 
-                <div className="hero__actions">
-                  <button
-                    className="heroPromo__btn heroPromo__btn--primary heroPromo__btn--primaryBlue"
-                    type="button"
-                  >
-                    구글 폰트에서 시작하기
-                  </button>
+                  <div className="hero__actions">
+                    <button
+                      className="heroPromo__btn heroPromo__btn--primary heroPromo__btn--primaryBlue"
+                      type="button"
+                    >
+                      구글 폰트에서 시작하기
+                    </button>
+                  </div>
+
+                  <div className="heroPromo__social">
+                    <div className="heroPromo__avatars">
+                      <img src={bannerAvatar1} alt="" />
+                      <img src={bannerAvatar2} alt="" />
+                      <div className="heroPromo__avatarsMore">+2k</div>
+                    </div>
+                    <p>12,400+ 명의 작가가 이미 폰트를 만들었습니다.</p>
+                  </div>
                 </div>
 
-                <div className="heroPromo__social">
-                  <div className="heroPromo__avatars">
-                    <img src={bannerAvatar1} alt="" />
-                    <img src={bannerAvatar2} alt="" />
-                    <div className="heroPromo__avatarsMore">+2k</div>
-                  </div>
-                  <p>12,400+ 명의 작가가 이미 폰트를 만들었습니다.</p>
+                <div className="hero__cards" aria-label="미리보기">
+                  <a className="pv" href="#/english-detail?fontName=Ubuntu">
+                    <header className="pv__top">
+                      <span className="pv__name">Ubuntu</span>
+                      <span className="pv__tag">구글</span>
+                    </header>
+                    <div className="pv__sample" style={{ fontFamily: 'Ubuntu, sans-serif' }}>
+                      Hello, World!
+                    </div>
+                  </a>
+
+                  <a className="pv" href="#/english-detail?fontName=Merriweather">
+                    <header className="pv__top">
+                      <span className="pv__name">Merriweather</span>
+                      <span className="pv__tag">구글</span>
+                    </header>
+                    <div className="pv__sample" style={{ fontFamily: 'Merriweather, serif' }}>
+                      merry christmas
+                    </div>
+                  </a>
+
+                  <a className="pv" href="#/english-detail?fontName=Playfair">
+                    <header className="pv__top">
+                      <span className="pv__name">Playfair</span>
+                      <span className="pv__tag">구글</span>
+                    </header>
+                    <div className="pv__sample" style={{ fontFamily: "'Playfair Display', serif" }}>
+                      Hello, World!
+                    </div>
+                  </a>
+
+                  <a className="pv" href="#/english-detail?fontName=Lato">
+                    <header className="pv__top">
+                      <span className="pv__name">Lato</span>
+                      <span className="pv__tag">구글</span>
+                    </header>
+                    <div className="pv__sample" style={{ fontFamily: 'Lato, sans-serif' }}>
+                      Hello, World!
+                    </div>
+                  </a>
+
+                  <article className="pv pv--dim" aria-hidden="true">
+                    <header className="pv__top">
+                      <span className="pv__name">Ubuntu</span>
+                      <span className="pv__tag">구글</span>
+                    </header>
+                    <div className="pv__skeleton" />
+                  </article>
+
+                  <article className="pv pv--dim" aria-hidden="true">
+                    <header className="pv__top">
+                      <span className="pv__name">Ubuntu</span>
+                      <span className="pv__tag">구글</span>
+                    </header>
+                    <div className="pv__skeleton" />
+                  </article>
                 </div>
-              </div>
-
-              {/* Slide 1 우측 카드: 카드 문구/샘플 폰트 수정 지점 */}
-              <div className="hero__cards" aria-label="미리보기">
-                <a className="pv" href="#/english-detail?fontName=Ubuntu">
-                  <header className="pv__top">
-                    <span className="pv__name">Ubuntu</span>
-                    <span className="pv__tag">구글</span>
-                  </header>
-                  <div className="pv__sample" style={{ fontFamily: 'Ubuntu, sans-serif' }}>
-                    Hello, World!
-                  </div>
-                </a>
-
-                <a className="pv" href="#/english-detail?fontName=Merriweather">
-                  <header className="pv__top">
-                    <span className="pv__name">Merryweather</span>
-                    <span className="pv__tag">구글</span>
-                  </header>
-                  <div className="pv__sample" style={{ fontFamily: 'Merriweather, serif' }}>
-                    merry christmas
-                  </div>
-                </a>
-
-                <a className="pv" href="#/english-detail?fontName=Playfair">
-                  <header className="pv__top">
-                    <span className="pv__name">Playfair</span>
-                    <span className="pv__tag">구글</span>
-                  </header>
-                  <div className="pv__sample" style={{ fontFamily: "'Playfair Display', serif" }}>
-                    Hello, World!
-                  </div>
-                </a>
-
-                <a className="pv" href="#/english-detail?fontName=Lato">
-                  <header className="pv__top">
-                    <span className="pv__name">Lato</span>
-                    <span className="pv__tag">구글</span>
-                  </header>
-                  <div className="pv__sample" style={{ fontFamily: 'Lato, sans-serif' }}>
-                    Hello, World!
-                  </div>
-                </a>
-
-                <article className="pv pv--dim" aria-hidden="true">
-                  <header className="pv__top">
-                    <span className="pv__name">Ubuntu</span>
-                    <span className="pv__tag">구글</span>
-                  </header>
-                  <div className="pv__skeleton" />
-                </article>
-
-                <article className="pv pv--dim" aria-hidden="true">
-                  <header className="pv__top">
-                    <span className="pv__name">Ubuntu</span>
-                    <span className="pv__tag">구글</span>
-                  </header>
-                  <div className="pv__skeleton" />
-                </article>
-              </div>
               </div>
             ) : currentSlide === 'figma' ? (
               <div className="heroPromo">
-              <div className="heroPromo__left">
-                <span className="heroPromo__tag">INK &amp; PIXEL EDITORIAL</span>
+                <div className="heroPromo__left">
+                  <span className="heroPromo__tag">INK &amp; PIXEL EDITORIAL</span>
 
-                <h1 className="heroPromo__title">
-                  당신의 손글씨가
-                  <br />
-                  <span className="heroPromo__line">
-                    <span className="heroPromo__accent">영원한 폰트</span>가 되는 순간
-                  </span>
-                </h1>
+                  <h1 className="heroPromo__title">
+                    당신의 손글씨가
+                    <br />
+                    <span className="heroPromo__line">
+                      <span className="heroPromo__accent">영원한 폰트</span>가 되는 순간
+                    </span>
+                  </h1>
 
-                <p className="heroPromo__desc">
-                  세상에 단 하나뿐인 당신의 기록을 디지털로 숨 쉬게 하세요.
-                  <br />
-                  가장 따뜻한 기술로 완성하는 나만의 서체 라이브러리.
-                </p>
+                  <p className="heroPromo__desc">
+                    세상에 단 하나뿐인 당신의 기록을 디지털로 숨 쉬게 하세요.
+                    <br />
+                    가장 따뜻한 기술로 완성하는 나만의 서체 라이브러리.
+                  </p>
 
-                {/* Slide 2 CTA 버튼: 라우팅/문구 수정 지점 */}
-                <div className="heroPromo__actions">
-                  <button
-                    className="heroPromo__btn heroPromo__btn--primary"
-                    type="button"
-                    onClick={() => {
-                      window.location.hash = '#/handwriting';
-                    }}
-                  >
-                    나만의 폰트 만들기
-                  </button>
-                  <button className="heroPromo__btn heroPromo__btn--ghost" type="button">
-                    샘플 둘러보기
-                  </button>
-                </div>
-
-                <div className="heroPromo__social">
-                  <div className="heroPromo__avatars">
-                    <img src={bannerAvatar1} alt="" />
-                    <img src={bannerAvatar2} alt="" />
-                    <div className="heroPromo__avatarsMore">+2k</div>
+                  <div className="heroPromo__actions">
+                    <button
+                      className="heroPromo__btn heroPromo__btn--primary"
+                      type="button"
+                      onClick={() => {
+                        window.location.hash = '#/handwriting';
+                      }}
+                    >
+                      나만의 폰트 만들기
+                    </button>
+                    <button className="heroPromo__btn heroPromo__btn--ghost" type="button">
+                      샘플 둘러보기
+                    </button>
                   </div>
-                  <p>12,400+ 명의 작가가 이미 폰트를 만들었습니다.</p>
-                </div>
-              </div>
 
-              {/* Slide 2 우측 카드: 타이틀/배지/칩 수정 지점 */}
-              <div className="heroPromo__right">
-                <div className="heroPromo__card">
-                  <p className="heroPromo__cardEyebrow">PREVIEW MODE</p>
-                  <h3 className="heroPromo__cardTitle">Digital Ink Engine</h3>
-                  <div className="heroPromo__handword">사랑</div>
-                  <div className="heroPromo__cardFooter">
-                    <span className="heroPromo__cardDot" />
-                    <span>Editorial Choice</span>
-                    <span className="heroPromo__version">VER. 2.0</span>
+                  <div className="heroPromo__social">
+                    <div className="heroPromo__avatars">
+                      <img src={bannerAvatar1} alt="" />
+                      <img src={bannerAvatar2} alt="" />
+                      <div className="heroPromo__avatarsMore">+2k</div>
+                    </div>
+                    <p>12,400+ 명의 작가가 이미 폰트를 만들었습니다.</p>
                   </div>
                 </div>
 
-                <div className="heroPromo__floating heroPromo__floating--badge">
-                  AI ACCURACY 99.8%
-                </div>
-                <div className="heroPromo__floating heroPromo__floating--chip">
-                  Real-time Rendering
+                <div className="heroPromo__right">
+                  <div className="heroPromo__card">
+                    <p className="heroPromo__cardEyebrow">PREVIEW MODE</p>
+                    <h3 className="heroPromo__cardTitle">Digital Ink Engine</h3>
+                    <div className="heroPromo__handword">사랑</div>
+                    <div className="heroPromo__cardFooter">
+                      <span className="heroPromo__cardDot" />
+                      <span>Editorial Choice</span>
+                      <span className="heroPromo__version">VER. 2.0</span>
+                    </div>
+                  </div>
+
+                  <div className="heroPromo__floating heroPromo__floating--badge">AI ACCURACY 99.8%</div>
+                  <div className="heroPromo__floating heroPromo__floating--chip">Real-time Rendering</div>
                 </div>
               </div>
-            </div>
             ) : (
               <div className="heroPromo heroPromo--scan">
                 <div className="heroPromo__left heroPromo__left--scan">
@@ -420,31 +446,36 @@ export default function HomePage() {
               <h2>인기 폰트</h2>
               <span>(다운로드 순)</span>
             </div>
-            <a className="chip chip--top10" href="#/top10">
-              인기 폰트
-            </a>
-          </div>
-
-          <div className="cards cards--4">
-            {popularFonts.map((font) => (
-              <HomeFontCard key={font.id} font={font} />
-            ))}
-          </div>
-        </section>
-
-        <section id="recommend" className="container section">
-          <div className="section__head">
-            <div className="section__title">
-              <h2>추천 폰트</h2>
-              <span>(만족도 순)</span>
+            <div className="featureFontsToolbar">
+              <div className="featureFontsPager" aria-label="인기 폰트 넘기기">
+                <button
+                  type="button"
+                  className="featureFontsPager__button"
+                  onClick={goToPrevFeaturedPage}
+                  aria-label="이전 인기 폰트"
+                >
+                  ‹
+                </button>
+                <span className="featureFontsPager__status">
+                  {featuredPage + 1} / {featuredPages.length}
+                </span>
+                <button
+                  type="button"
+                  className="featureFontsPager__button"
+                  onClick={goToNextFeaturedPage}
+                  aria-label="다음 인기 폰트"
+                >
+                  ›
+                </button>
+              </div>
             </div>
-            <a className="chip" href="#">
-              추천 폰트
-            </a>
           </div>
 
-          <div className="cards cards--4">
-            {recommendedFonts.map((font) => (
+          <div
+            key={`${featuredPage}-${featuredDirection}`}
+            className={`featureFontsGrid featureFontsGrid--threeUp featureFontsGrid--animated featureFontsGrid--${featuredDirection}`}
+          >
+            {featuredPages[featuredPage].map((font) => (
               <HomeFontCard key={font.id} font={font} />
             ))}
           </div>
@@ -485,14 +516,11 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* 커뮤니티/리뷰: 카드 내용 + 스크롤 단계 노출 인터랙션 대상 */}
         <section ref={communityRef} className="container section community">
           <div className="section__head">
             <div>
               <h2 className="community__title">커뮤니티 / 리뷰</h2>
-              <p className="community__desc">
-                다른 사용자들이 생성한 놀라운 폰트들을 확인해보세요.
-              </p>
+              <p className="community__desc">다른 사용자들이 생성한 놀라운 폰트들을 확인해보세요.</p>
             </div>
             <a className="link-more" href="#">
               더 보기 <span aria-hidden="true">→</span>
@@ -591,10 +619,7 @@ export default function HomePage() {
 
             <article className="tile tile--night tile--h208">
               <div className="tile__center">
-                <div
-                  className="tile__mid"
-                  style={{ color: '#e5e7eb', fontWeight: 300 }}
-                >
+                <div className="tile__mid" style={{ color: '#e5e7eb', fontWeight: 300 }}>
                   여 백
                 </div>
               </div>
@@ -621,4 +646,3 @@ export default function HomePage() {
     </>
   );
 }
-

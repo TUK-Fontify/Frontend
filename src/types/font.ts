@@ -6,6 +6,10 @@ export type HomeFontCardData = {
   fontFamily: string;
   description: string;
   attribution?: string;
+  previewGlyph?: string;
+  previewGlyphSecondary?: string;
+  previewDisplay?: string;
+  sampleScale?: 'default' | 'large';
   visualVariant?: 'paper' | 'sunrise' | 'mist' | 'gradient';
   quoteLines?: string[];
 };

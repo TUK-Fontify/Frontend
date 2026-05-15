@@ -1006,6 +1006,298 @@ button,input{font:inherit}
 /* Font cards rows */
 .cards{display:grid; gap:24px}
 .cards--4{grid-template-columns:repeat(4, minmax(0,1fr))}
+.featureFontsGrid{
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0, 1fr));
+  gap:30px;
+}
+
+.featureFontsGrid--threeUp{
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+  gap:34px 30px;
+}
+
+.featureFontsGrid--animated{
+  animation-duration:.38s;
+  animation-timing-function:cubic-bezier(.22,1,.36,1);
+  animation-fill-mode:both;
+}
+
+.featureFontsGrid--animated .featureFontCard{
+  opacity:0;
+  animation:featureFontCardCascade .46s cubic-bezier(.22,1,.36,1) forwards;
+}
+
+.featureFontsGrid--animated .featureFontCard:nth-child(1){
+  animation-delay:.04s;
+}
+
+.featureFontsGrid--animated .featureFontCard:nth-child(2){
+  animation-delay:.11s;
+}
+
+.featureFontsGrid--animated .featureFontCard:nth-child(3){
+  animation-delay:.18s;
+}
+
+.featureFontsGrid--next{
+  animation-name:featureFontsSlideNext;
+}
+
+.featureFontsGrid--prev{
+  animation-name:featureFontsSlidePrev;
+}
+
+@keyframes featureFontsSlideNext{
+  from{
+    opacity:0;
+    transform:translateX(28px) scale(.985);
+  }
+  to{
+    opacity:1;
+    transform:translateX(0) scale(1);
+  }
+}
+
+@keyframes featureFontsSlidePrev{
+  from{
+    opacity:0;
+    transform:translateX(-28px) scale(.985);
+  }
+  to{
+    opacity:1;
+    transform:translateX(0) scale(1);
+  }
+}
+
+@keyframes featureFontCardCascade{
+  from{
+    opacity:0;
+    transform:translateY(18px) scale(.985);
+    filter:blur(4px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0) scale(1);
+    filter:blur(0);
+  }
+}
+
+.featureFontsToolbar{
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+
+.featureFontsPager{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.featureFontsPager__button{
+  width:38px;
+  height:38px;
+  border:1px solid #d6dfeb;
+  border-radius:999px;
+  background:#fff;
+  color:#274690;
+  font-size:22px;
+  line-height:1;
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+  box-shadow:0 6px 14px rgba(15,23,42,.06);
+}
+
+.featureFontsPager__status{
+  min-width:52px;
+  text-align:center;
+  color:#64748b;
+  font-size:13px;
+  font-weight:700;
+}
+
+.featureFontCard{
+  position:relative;
+  overflow:hidden;
+  border:1px solid #dbe3f0;
+  border-radius:16px;
+  background:#ffffff;
+  box-shadow:0 14px 34px rgba(15,23,42,.06);
+}
+
+.featureFontCard__favorite{
+  position:absolute;
+  top:24px;
+  right:24px;
+  z-index:2;
+  width:48px;
+  height:48px;
+  border:1px solid #dbe3f0;
+  border-radius:999px;
+  background:rgba(255,255,255,.94);
+  color:#374151;
+  font-size:24px;
+  line-height:1;
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+}
+
+.featureFontCard__preview{
+  min-height:292px;
+  padding:26px 24px 22px;
+  border-bottom:1px solid #edf2f7;
+  background:linear-gradient(180deg,#ffffff 0%, #fcfdff 100%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+
+.featureFontCard__previewInner{
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+
+.featureFontCard__preview--multiline .featureFontCard__previewInner{
+  transform:translateY(14px);
+}
+
+.featureFontCard__glyph{
+  color:#001b3d;
+  font-size:88px;
+  line-height:.92;
+  font-weight:800;
+  letter-spacing:-.08em;
+  display:flex;
+  align-items:flex-end;
+  gap:10px;
+}
+
+.featureFontCard__glyph span{
+  display:block;
+}
+
+.featureFontCard__glyph--wordmark{
+  display:block;
+  font-size:62px;
+  line-height:1.02;
+  letter-spacing:-.04em;
+  text-align:center;
+  word-break:keep-all;
+}
+
+.featureFontCard__glyph--wordmark span{
+  display:block;
+}
+
+.featureFontCard__headline{
+  margin:16px 0 0;
+  color:#334155;
+  font-size:16px;
+  line-height:1.45;
+  font-weight:700;
+}
+
+.featureFontCard__headline--large{
+  font-size:18px;
+  line-height:1.5;
+}
+
+.featureFontCard__copy{
+  margin:10px 0 0;
+  color:#64748b;
+  font-size:14px;
+  line-height:1.6;
+  white-space:pre-line;
+}
+
+.featureFontCard__body{
+  padding:22px 22px 22px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+.featureFontCard__meta{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:16px;
+}
+
+.featureFontCard__meta strong{
+  display:block;
+  margin:0;
+  color:#001b3d;
+  font-size:18px;
+  line-height:1.25;
+  font-weight:900;
+  letter-spacing:-.04em;
+}
+
+.featureFontCard__meta p{
+  margin:6px 0 0;
+  color:#475569;
+  font-size:14px;
+  line-height:1.45;
+}
+
+.featureFontCard__meta span{
+  flex:0 0 auto;
+  min-height:36px;
+  padding:0 16px;
+  border:1px solid #bfdbfe;
+  border-radius:12px;
+  background:#eff6ff;
+  color:#0057d8;
+  font-size:12px;
+  line-height:1;
+  font-weight:800;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  letter-spacing:.08em;
+}
+
+.featureFontCard__actions{
+  display:flex;
+  justify-content:flex-end;
+}
+
+.featureFontCard__download,
+.featureFontCard__download--icon{
+  min-height:48px;
+  border-radius:12px;
+  font-size:14px;
+  font-weight:800;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+}
+
+.featureFontCard__download{
+  border:1px solid #d5e1f2;
+  background:#ffffff;
+  color:#0057d8;
+  box-shadow:none;
+}
+
+.featureFontCard__download--icon{
+  width:48px;
+  min-width:48px;
+  padding:0;
+  font-size:18px;
+  box-shadow:none;
+}
+
 .font-card{
   position:relative;
   z-index:1;
@@ -1785,6 +2077,9 @@ button,input{font:inherit}
     width:360px;
   }
   .cards--4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .featureFontsGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .featureFontsGrid--threeUp{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .featureFontsToolbar{gap:12px}
   .gallery{grid-template-columns:repeat(2,minmax(0,1fr))}
   .footer__top{grid-template-columns:1fr 1fr}
 }
@@ -1894,6 +2189,17 @@ button,input{font:inherit}
   }
   .nav{gap:16px}
   .cards--4{grid-template-columns:1fr}
+  .featureFontsGrid{grid-template-columns:1fr}
+  .featureFontsGrid--threeUp{grid-template-columns:1fr}
+  .featureFontsToolbar{width:100%; justify-content:space-between}
+  .featureFontsPager__button{width:34px; height:34px; font-size:20px}
+  .featureFontCard__preview{min-height:264px; padding:22px 20px 18px}
+  .featureFontCard__glyph{font-size:72px; gap:8px}
+  .featureFontCard__glyph--wordmark{font-size:48px}
+  .featureFontCard__headline{font-size:15px}
+  .featureFontCard__copy{font-size:13px}
+  .featureFontCard__body{padding:18px 18px 16px}
+  .featureFontCard__actions{justify-content:flex-end}
   .steps{grid-template-columns:1fr}
   .steps__line{display:none}
   .gallery{grid-template-columns:1fr}
