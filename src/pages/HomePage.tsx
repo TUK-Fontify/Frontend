@@ -8,15 +8,71 @@ const heroSlides = ['existing', 'figma', 'scan'] as const;
 const heroSlideCount = heroSlides.length;
 const COMMUNITY_BATCH_SIZE = 3;
 const COMMUNITY_TILE_COUNT = 10;
+const FEATURED_FONT_LIKES_STORAGE_KEY = 'fontify-featured-font-likes';
 
 const bannerAvatar1 = '/images/my-page/activity-like-icon.svg';
 const bannerAvatar2 = '/images/my-page/activity-owned-font-icon.svg';
 
-function HomeFontCard({ font }: { font: HomeFontCardData }) {
+type LikedFeaturedFont = Pick<
+  HomeFontCardData,
+  'id' | 'name' | 'source' | 'sample' | 'fontFamily' | 'description' | 'attribution'
+>;
+
+function canUseStorage() {
+  return typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
+}
+
+function readLikedFeaturedFonts(): LikedFeaturedFont[] {
+  if (!canUseStorage()) return [];
+
+  try {
+    const raw = window.localStorage.getItem(FEATURED_FONT_LIKES_STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw) as LikedFeaturedFont[];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeLikedFeaturedFonts(fonts: LikedFeaturedFont[]) {
+  if (!canUseStorage()) return;
+  window.localStorage.setItem(FEATURED_FONT_LIKES_STORAGE_KEY, JSON.stringify(fonts));
+}
+
+function HomeFontCard({
+  font,
+  liked,
+  onToggleLike,
+}: {
+  font: HomeFontCardData;
+  liked: boolean;
+  onToggleLike: (font: HomeFontCardData) => void;
+}) {
   return (
     <article className="featureFontCard">
-      <button className="featureFontCard__favorite" type="button" aria-label={`${font.name} 좋아요`}>
-        <span aria-hidden="true">♡</span>
+      <button
+        className={liked ? 'featureFontCard__favorite is-active' : 'featureFontCard__favorite'}
+        type="button"
+        aria-label={liked ? `${font.name} 좋아요 취소` : `${font.name} 좋아요`}
+        aria-pressed={liked}
+        onClick={() => onToggleLike(font)}
+      >
+        <svg
+          className="featureFontCard__favoriteIcon"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path
+            d="M12 21s-6.716-4.31-9.193-8.145C1.094 10.21 1.5 6.72 4.433 5.14A5.35 5.35 0 0 1 12 7.186 5.35 5.35 0 0 1 19.567 5.14c2.933 1.58 3.34 5.07 1.626 7.715C18.716 16.69 12 21 12 21Z"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
       </button>
 
       <div
@@ -36,7 +92,7 @@ function HomeFontCard({ font }: { font: HomeFontCardData }) {
             ) : (
               <>
                 <span>{font.previewGlyph ?? 'R'}</span>
-                <span>{font.previewGlyphSecondary ?? '가'}</span>
+                <span>{font.previewGlyphSecondary ?? '?'}</span>
               </>
             )}
           </div>
@@ -67,9 +123,23 @@ function HomeFontCard({ font }: { font: HomeFontCardData }) {
           <a
             className="featureFontCard__download featureFontCard__download--icon"
             href={`#/english-detail?fontName=${encodeURIComponent(font.name)}`}
-            aria-label={`${font.name} 다운로드`}
+            aria-label={`${font.name} ????`}
           >
-            <span aria-hidden="true">↓</span>
+            <svg
+              className="featureFontCard__downloadIcon"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path
+                d="M12 4v10m0 0 4-4m-4 4-4-4M5 18h14"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
           </a>
         </div>
       </div>
@@ -82,6 +152,9 @@ export default function HomePage() {
   const [featuredPage, setFeaturedPage] = useState(0);
   const [featuredDirection, setFeaturedDirection] = useState<'next' | 'prev'>('next');
   const [visibleCommunityCount, setVisibleCommunityCount] = useState(0);
+  const [likedFeaturedFontIds, setLikedFeaturedFontIds] = useState<string[]>(
+    () => readLikedFeaturedFonts().map((font) => font.id),
+  );
   const communityRef = useRef<HTMLElement | null>(null);
   const featuredPageSize = 3;
   const featuredPages = Array.from(
@@ -110,6 +183,34 @@ export default function HomePage() {
   const goToNextFeaturedPage = () => {
     setFeaturedDirection('next');
     setFeaturedPage((prev) => (prev + 1) % featuredPages.length);
+  };
+
+  const toggleFeaturedFontLike = (font: HomeFontCardData) => {
+    setLikedFeaturedFontIds((current) => {
+      const isLiked = current.includes(font.id);
+      const nextIds = isLiked
+        ? current.filter((id) => id !== font.id)
+        : [...current, font.id];
+
+      const currentSaved = readLikedFeaturedFonts();
+      const nextSaved = isLiked
+        ? currentSaved.filter((item) => item.id !== font.id)
+        : [
+            {
+              id: font.id,
+              name: font.name,
+              source: font.source,
+              sample: font.sample,
+              fontFamily: font.fontFamily,
+              description: font.description,
+              attribution: font.attribution,
+            },
+            ...currentSaved.filter((item) => item.id !== font.id),
+          ];
+
+      writeLikedFeaturedFonts(nextSaved);
+      return nextIds;
+    });
   };
 
   useEffect(() => {
@@ -476,7 +577,12 @@ export default function HomePage() {
             className={`featureFontsGrid featureFontsGrid--threeUp featureFontsGrid--animated featureFontsGrid--${featuredDirection}`}
           >
             {featuredPages[featuredPage].map((font) => (
-              <HomeFontCard key={font.id} font={font} />
+              <HomeFontCard
+                key={font.id}
+                font={font}
+                liked={likedFeaturedFontIds.includes(font.id)}
+                onToggleLike={toggleFeaturedFontLike}
+              />
             ))}
           </div>
         </section>

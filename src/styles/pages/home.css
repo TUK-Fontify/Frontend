@@ -1143,6 +1143,42 @@ button,input{font:inherit}
   display:grid;
   place-items:center;
   cursor:pointer;
+  transition:transform .18s ease, border-color .18s ease, background-color .18s ease, color .18s ease, box-shadow .18s ease;
+}
+
+.featureFontCard__favoriteIcon{
+  width:22px;
+  height:22px;
+  display:block;
+  transition:transform .18s ease, fill .18s ease, stroke .18s ease;
+}
+
+.featureFontCard__downloadIcon{
+  width:20px;
+  height:20px;
+  display:block;
+}
+
+.featureFontCard__favorite:hover{
+  transform:translateY(-1px) scale(1.03);
+  border-color:#fecdd3;
+  color:#e11d48;
+  box-shadow:0 10px 20px rgba(225,29,72,.12);
+}
+
+.featureFontCard__favorite.is-active{
+  border-color:#fecdd3;
+  background:#fff1f2;
+  color:#e11d48;
+  box-shadow:0 10px 22px rgba(225,29,72,.14);
+}
+
+.featureFontCard__favorite.is-active .featureFontCard__favoriteIcon{
+  transform:scale(1.08);
+}
+
+.featureFontCard__favorite.is-active .featureFontCard__favoriteIcon path{
+  fill:currentColor;
 }
 
 .featureFontCard__preview{

@@ -12,9 +12,27 @@ const env = (import.meta as ImportMetaWithEnv).env ?? {};
 const rawApiBaseUrl =
   typeof env.VITE_API_BASE_URL === 'string' ? env.VITE_API_BASE_URL : undefined;
 const fallbackApiBaseUrl = env.DEV ? '/api/v1' : 'http://localhost:8000/api/v1';
+const rawProxyTarget =
+  typeof env.VITE_API_PROXY_TARGET === 'string' ? env.VITE_API_PROXY_TARGET : undefined;
 
 export const API_BASE_URL =
   (rawApiBaseUrl ?? fallbackApiBaseUrl).replace(/\/$/, '');
+
+export const API_ASSET_ORIGIN = (() => {
+  if (rawProxyTarget) {
+    return rawProxyTarget.replace(/\/$/, '');
+  }
+
+  if (rawApiBaseUrl && /^https?:\/\//.test(rawApiBaseUrl)) {
+    return new URL(rawApiBaseUrl).origin;
+  }
+
+  if (typeof window !== 'undefined') {
+    return window.location.origin;
+  }
+
+  return 'http://localhost:8000';
+})();
 
 const DEV_USER_ID = env.VITE_DEV_USER_ID ?? 'dev-user-001';
 
@@ -33,6 +51,13 @@ export class ApiError extends Error {
 function buildUrl(path: string) {
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
   return `${API_BASE_URL}${normalizedPath}`;
+}
+
+export function resolveApiAssetUrl(path: string | null | undefined) {
+  if (!path) return undefined;
+  if (/^https?:\/\//.test(path)) return path;
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  return `${API_ASSET_ORIGIN}${normalizedPath}`;
 }
 
 async function parseResponse(response: Response) {

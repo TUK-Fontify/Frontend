@@ -7,7 +7,7 @@ export const featuredFonts: HomeFontCardData[] = [
     source: 'SANS-SERIF',
     sample: '투쟁은 끝이 났다.',
     fontFamily: '"Pretendard", sans-serif',
-    description: '그는 자신의 투쟁에서 승리했다. 그는 빅 브라더를 사랑했다.',
+    description: '그는 자신의 투쟁에서 승리했다.\n그는 빅 브라더를 사랑했다.',
     attribution: '김현민 (Kim Hyun Min)',
     previewDisplay: 'big brother',
   },

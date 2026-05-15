@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
+import { resolveApiAssetUrl } from '../api/client';
 import { fontifyApi } from '../api/fontifyApi';
 import type { ApiFontFileItem } from '../api/backendTypes';
 import { saveStoredGenerationJob } from '../api/generationStorage';
@@ -134,7 +135,7 @@ export default function EnglishDetailPage() {
               </button>
               <a
                 className="btn btn--ghost btn--sm"
-                href={font?.file_url || undefined}
+                href={resolveApiAssetUrl(font?.file_url)}
                 target="_blank"
                 rel="noreferrer"
                 aria-disabled={!font?.file_url}

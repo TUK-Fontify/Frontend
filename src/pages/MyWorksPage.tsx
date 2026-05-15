@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { fontifyApi } from '../api/fontifyApi';
-import { getStoredGenerationJobs, removeStoredGenerationJob } from '../api/generationStorage';
+import { removeStoredGenerationJob } from '../api/generationStorage';
 import { mapGenerationStatusToWorkItem } from '../api/mappers';
 import { mockWorkItems } from '../mocks/works';
 import type { WorkItem, WorkTimelineLog } from '../types/work';
@@ -44,9 +44,22 @@ function getStepState(totalProgress: number, index: number) {
   return 'waiting';
 }
 
+function getFailedStageIndex(work: WorkItem) {
+  if (work.downloadUrl) return 3;
+  if (work.previewImageUrls?.length || work.previewLetters?.length) return 2;
+  return 0;
+}
+
+function hasPreviewGeneratedBeforeFailure(work: WorkItem) {
+  return work.phase === 'failed' && getFailedStageIndex(work) >= 2;
+}
+
 function getProcessStageState(work: WorkItem, index: number) {
   if (work.phase === 'failed') {
-    return index === 0 ? 'failed' : 'waiting';
+    const failedStageIndex = getFailedStageIndex(work);
+    if (index < failedStageIndex) return 'done';
+    if (index === failedStageIndex) return 'failed';
+    return 'waiting';
   }
   if (work.phase === 'queued') return 'waiting';
   if (work.phase === 'analyzing') return index === 0 ? 'active' : 'waiting';
@@ -74,6 +87,29 @@ function getProcessStageStatus(work: WorkItem, index: number) {
   if (state === 'done') return '완료';
   if (state === 'active') return `진행 중 (${stepProgress}%)`;
   return '대기';
+}
+
+function getDisplayProcessStageStatus(work: WorkItem, index: number) {
+  if (work.phase === 'failed') {
+    const failedStageIndex = getFailedStageIndex(work);
+    if (index < failedStageIndex) return 'Done';
+    return index === failedStageIndex ? 'Failed' : 'Pending';
+  }
+
+  return getProcessStageStatus(work, index);
+}
+
+function getDisplayPhaseMessage(work: WorkItem) {
+  if (work.phase === 'failed' && (work.previewImageUrls?.length || work.previewLetters?.length)) {
+    return {
+      title: 'Preview generated, final generation failed',
+      body:
+        work.failReason ??
+        'The preview images were created successfully, but the final font generation did not complete.',
+    };
+  }
+
+  return getPhaseMessage(work);
 }
 
 function getPhaseMessage(work: WorkItem) {
@@ -150,7 +186,7 @@ function ProgressStepper({ work }: { work: WorkItem }) {
             </div>
             <p>
               <strong>{step}</strong>
-              <span>{getProcessStageStatus(work, index)}</span>
+              <span>{getDisplayProcessStageStatus(work, index)}</span>
             </p>
           </div>
           );
@@ -162,7 +198,7 @@ function ProgressStepper({ work }: { work: WorkItem }) {
 
 function PreviewGrid({ work }: { work: WorkItem }) {
   const normalizedProgress = clampPercent(work.progressPercent);
-  const phaseMessage = getPhaseMessage(work);
+  const phaseMessage = getDisplayPhaseMessage(work);
 
   return (
     <section className="workPreview">
@@ -190,7 +226,7 @@ function PreviewGrid({ work }: { work: WorkItem }) {
         <div className="workPreview__grid workPreview__grid--images">
           {work.previewImageUrls.map((imageUrl, index) => (
             <div
-              className={`workPreview__imageCard ${index > 10 ? 'is-muted' : ''} ${
+              className={`workPreview__imageCard ${
                 index === 2 ? 'is-selected' : ''
               }`}
               key={imageUrl}
@@ -204,7 +240,7 @@ function PreviewGrid({ work }: { work: WorkItem }) {
         <div className="workPreview__grid">
           {work.previewLetters?.map((letter, index) => (
             <div
-              className={`workPreview__letter ${index > 10 ? 'is-muted' : ''} ${
+              className={`workPreview__letter ${
                 index === 2 ? 'is-selected' : ''
               }`}
               key={letter}
@@ -282,7 +318,11 @@ function WorkCard({
             onClick={onToggle}
             aria-expanded={expanded}
           >
-            {expanded ? '실패 내역 닫기' : '실패 내역 보기'}
+            {expanded
+              ? '실패 내역 닫기'
+              : hasPreviewGeneratedBeforeFailure(work)
+                ? '최종 생성 실패 내역 보기'
+                : '실패 내역 보기'}
           </button>
         ) : (
           <button
@@ -375,30 +415,47 @@ export default function MyWorksPage() {
     let isMounted = true;
 
     const loadJobs = async () => {
-      const storedJobs = getStoredGenerationJobs();
-
-      if (storedJobs.length === 0) {
-        if (!isMounted) return;
-        setWorkItems([]);
-        setIsLoading(false);
-        setLoadError('');
-        return;
-      }
-
       try {
-        const results = await Promise.all(
-          storedJobs.map(async (storedJob) => {
-            const status = await fontifyApi.getGenerationStatus(storedJob.jobId);
-            return mapGenerationStatusToWorkItem(storedJob, status);
+        const jobs = await fontifyApi.getMyGenerations();
+
+        if (jobs.length === 0) {
+          if (!isMounted) return;
+          setWorkItems([]);
+          setLoadError('');
+          return;
+        }
+
+        const results = await Promise.allSettled(
+          jobs.map(async (job) => {
+            const status = await fontifyApi.getGenerationStatus(job.job_id);
+            return mapGenerationStatusToWorkItem(
+              {
+                jobId: job.job_id,
+                fontFileId: 0,
+                fontName: job.font_name,
+                requestedAt: job.requested_at,
+              },
+              status,
+            );
           }),
         );
 
+        const resolvedItems = results
+          .filter((result): result is PromiseFulfilledResult<WorkItem> => result.status === 'fulfilled')
+          .map((result) => result.value);
+        const failedCount = results.length - resolvedItems.length;
+
         if (!isMounted) return;
-        setWorkItems(results);
-        setLoadError('');
+        setWorkItems(resolvedItems);
+        setLoadError(
+          failedCount > 0
+            ? `${failedCount}개의 작업 상태를 불러오지 못했습니다. 서버에 남아 있는 작업만 표시합니다.`
+            : '',
+        );
       } catch (error) {
         if (!isMounted) return;
         setLoadError(error instanceof Error ? error.message : '작업 상태를 불러오지 못했습니다.');
+        setWorkItems([]);
       } finally {
         if (isMounted) {
           setIsLoading(false);
@@ -446,13 +503,14 @@ export default function MyWorksPage() {
 
         {isLoading ? (
           <WorkListStatus title="작업을 불러오는 중" body="작업 목록과 진행 로그를 준비하고 있습니다." />
-        ) : loadError ? (
+        ) : loadError && workItems.length === 0 ? (
           <WorkListStatus title="작업을 불러오지 못했습니다" body={loadError} />
         ) : workItems.length === 0 ? (
           <WorkListStatus title="진행 중인 작업이 없습니다" body="새로운 영문 폰트를 선택해 한글화 작업을 시작해보세요." />
         ) : (
           <div className="myWorksPage__layout">
             <div className="myWorksPage__left">
+              {loadError ? <WorkListStatus title="일부 작업만 표시 중입니다" body={loadError} /> : null}
               {workItems.map((work) => (
                 <WorkCard
                   key={work.id}
